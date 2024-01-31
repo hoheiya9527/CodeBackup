@@ -27,6 +27,7 @@ package com.github.tvbox.osc.subtitle.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
 import androidx.annotation.Nullable;
 
 import android.graphics.Canvas;
@@ -241,12 +242,19 @@ public class SimpleSubtitleView extends TextView
     private void drawBackGroundText() {
         TextPaint tp = backGroundText.getPaint();
         //设置描边宽度
-        tp.setStrokeWidth(10);
+        tp.setStrokeWidth(5);
         //背景描边并填充全部
         tp.setStyle(Paint.Style.FILL_AND_STROKE);
         //设置描边颜色
-        backGroundText.setTextColor(Color.BLACK);
+        int currentTextColor = getCurrentTextColor();
+        int alpha = Color.alpha(currentTextColor);
+        backGroundText.setTextColor(Color.argb(alpha, 0, 0, 0));
         //将背景的文字对齐方式做同步
         backGroundText.setGravity(getGravity());
+    }
+
+    @Override
+    public void setTextColor(int color) {
+        super.setTextColor(color);
     }
 }

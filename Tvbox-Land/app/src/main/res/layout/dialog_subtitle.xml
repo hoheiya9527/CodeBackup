@@ -125,7 +125,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
-                    android:text="字幕样式一"
+                    android:text="透明度减小"
                     android:textColor="@color/color_FFFFFF"
                     android:shadowColor="@color/color_CC000000"
                     android:shadowRadius="2"
@@ -134,13 +134,16 @@
                     android:textSize="@dimen/ts_20" />
 
                 <TextView
+                    android:id="@+id/tv_subtitle_transparent"
                     android:layout_width="@dimen/vs_120"
                     android:layout_height="@dimen/vs_60"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
-                    android:text=""
+                    android:text="0"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_40" />
 
                 <TextView
@@ -152,10 +155,10 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
-                    android:text="字幕样式二"
+                    android:text="透明度增加"
                     android:textStyle="bold"
-                    android:textColor="@color/color_FFB6C1"
-                    android:shadowColor="@color/color_FFFFFF"
+                    android:textColor="@color/color_FFFFFF"
+                    android:shadowColor="@color/color_CC000000"
                     android:shadowRadius="2"
                     android:shadowDx="1"
                     android:shadowDy="1"

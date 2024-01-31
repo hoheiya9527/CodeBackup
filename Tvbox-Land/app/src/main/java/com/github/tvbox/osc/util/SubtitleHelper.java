@@ -25,6 +25,14 @@ public class SubtitleHelper {
         return subtitleConfigSize;
     }
 
+    public static void setTextTransparent(int value) {
+        Hawk.put(HawkConfig.SUBTITLE_TEXT_TRANSPARENT, value);
+    }
+
+    public static int getTextTransparent() {
+        return Hawk.get(HawkConfig.SUBTITLE_TEXT_TRANSPARENT, 2);
+    }
+
     public static void setTextSize(int size) {
         Hawk.put(HawkConfig.SUBTITLE_TEXT_SIZE, size);
     }

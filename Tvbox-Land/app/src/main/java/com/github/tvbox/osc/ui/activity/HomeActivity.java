@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,7 @@ import java.util.List;
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
 public class HomeActivity extends BaseActivity {
+    private static final String URL_DEFAULT = "https://github.moeyy.xyz/https://github.com/hoheiya9527/TvboxSelf/blob/main/src.json";
     private LinearLayout topLayout;
     private LinearLayout contentLayout;
     private TextView tvDate;
@@ -309,6 +311,9 @@ public class HomeActivity extends BaseActivity {
             }
             return;
         }
+        //设定默认地址
+        setDefaultUrl();
+        //
         ApiConfig.get().loadConfig(useCacheConfig, new ApiConfig.LoadConfigCallback() {
             TipDialog dialog = null;
 
@@ -397,6 +402,14 @@ public class HomeActivity extends BaseActivity {
                 });
             }
         }, this);
+    }
+
+    private void setDefaultUrl() {
+        String url = Hawk.get(HawkConfig.API_URL, "");
+        if (TextUtils.isEmpty(url)){
+            Hawk.put(HawkConfig.API_URL,URL_DEFAULT);//默认连接地址
+            Hawk.put(HawkConfig.PLAY_RENDER, 1);//默认渲染-Surface
+        }
     }
 
     private void initViewPager(AbsSortXml absXml) {

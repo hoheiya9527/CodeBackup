@@ -1,7 +1,9 @@
 package com.github.tvbox.osc.player.controller;
 
-import android.app.Activity;
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
@@ -27,12 +29,11 @@ import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
+import com.github.tvbox.osc.util.ColorUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
-import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.ScreenUtils;
 import com.github.tvbox.osc.util.SubtitleHelper;
-import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
@@ -42,14 +43,11 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.Date;
+import java.util.List;
 
 import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
-
-import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
@@ -137,7 +135,7 @@ public class VodController extends BaseController {
     public TextView mLandscapePortraitBtn;
     private View backBtn;//返回键
     private boolean isClickBackBtn;
-   
+
     LockRunnable lockRunnable = new LockRunnable();
     private boolean isLock = false;
     Handler myHandle;
@@ -157,12 +155,12 @@ public class VodController extends BaseController {
             mPlayLoadNetSpeed.setText(speed);
             String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
             String height = Integer.toString(mControlWrapper.getVideoSize()[1]);
-            mVideoSize.setText("[ " + width + " X " + height +" ]");
+            mVideoSize.setText("[ " + width + " X " + height + " ]");
 
             mHandler.postDelayed(this, 1000);
         }
     };
-    
+
     private void showLockView() {
         mLockView.setVisibility(ScreenUtils.isTv(getContext()) ? INVISIBLE : VISIBLE);
         mHandler.removeCallbacks(lockRunnable);
@@ -404,7 +402,7 @@ public class VodController extends BaseController {
                     ArrayList<Integer> exsitPlayerTypes = PlayerHelper.getExistPlayerTypes();
                     int playerTypeIdx = 0;
                     int playerTypeSize = exsitPlayerTypes.size();
-                    for(int i = 0; i<playerTypeSize; i++) {
+                    for (int i = 0; i < playerTypeSize; i++) {
                         if (playerType == exsitPlayerTypes.get(i)) {
                             if (i == playerTypeSize - 1) {
                                 playerTypeIdx = 0;
@@ -438,7 +436,7 @@ public class VodController extends BaseController {
                     int defaultPos = 0;
                     ArrayList<Integer> players = PlayerHelper.getExistPlayerTypes();
                     ArrayList<Integer> renders = new ArrayList<>();
-                    for(int p = 0; p<players.size(); p++) {
+                    for (int p = 0; p < players.size(); p++) {
                         renders.add(p);
                         if (players.get(p) == playerType) {
                             defaultPos = p;
@@ -543,8 +541,9 @@ public class VodController extends BaseController {
                 try {
                     int current = (int) mControlWrapper.getCurrentPosition();
                     int duration = (int) mControlWrapper.getDuration();
-                    if (current > duration / 2) return;
-                    mPlayerConfig.put("st",current/1000);
+                    if (current > duration / 2)
+                        return;
+                    mPlayerConfig.put("st", current / 1000);
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                 } catch (JSONException e) {
@@ -573,8 +572,9 @@ public class VodController extends BaseController {
                 try {
                     int current = (int) mControlWrapper.getCurrentPosition();
                     int duration = (int) mControlWrapper.getDuration();
-                    if (current < duration / 2) return;
-                    mPlayerConfig.put("et", (duration - current)/1000);
+                    if (current < duration / 2)
+                        return;
+                    mPlayerConfig.put("et", (duration - current) / 1000);
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                 } catch (JSONException e) {
@@ -653,7 +653,7 @@ public class VodController extends BaseController {
     }
 
     public void initLandscapePortraitBtnInfo() {
-        if(mControlWrapper!=null && mActivity!=null){
+        if (mControlWrapper != null && mActivity != null) {
             int width = mControlWrapper.getVideoSize()[0];
             int height = mControlWrapper.getVideoSize()[1];
             double screenSqrt = ScreenUtils.getSqrt(mActivity);
@@ -678,6 +678,7 @@ public class VodController extends BaseController {
     void initSubtitleInfo() {
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
+        mSubtitleView.setTextColor(ColorUtil.getSubtitleColor());
     }
 
     @Override
@@ -818,8 +819,10 @@ public class VodController extends BaseController {
         simSlideOffset += (10000.0f * dir);
         int currentPosition = (int) mControlWrapper.getCurrentPosition();
         int position = (int) (simSlideOffset + currentPosition);
-        if (position > duration) position = duration;
-        if (position < 0) position = 0;
+        if (position > duration)
+            position = duration;
+        if (position < 0)
+            position = 0;
         updateSeekUI(currentPosition, position, duration);
         simSeekPosition = position;
     }
@@ -867,7 +870,8 @@ public class VodController extends BaseController {
                 break;
             case VideoView.STATE_PREPARING:
             case VideoView.STATE_BUFFERING:
-                if(mProgressRoot.getVisibility()==GONE)mPlayLoadNetSpeed.setVisibility(VISIBLE);
+                if (mProgressRoot.getVisibility() == GONE)
+                    mPlayLoadNetSpeed.setVisibility(VISIBLE);
                 break;
             case VideoView.STATE_PLAYBACK_COMPLETED:
                 listener.playNext(true);
@@ -916,7 +920,7 @@ public class VodController extends BaseController {
                     return true;
                 }
 //            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
-            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_MENU) {
                 if (!isBottomVisible()) {
                     showBottom();
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
@@ -937,9 +941,10 @@ public class VodController extends BaseController {
 
     private boolean fromLongPress;
     private float speed_old = 1.0f;
+
     @Override
     public void onLongPress(MotionEvent e) {
-        if (videoPlayState!=VideoView.STATE_PAUSED) {
+        if (videoPlayState != VideoView.STATE_PAUSED) {
             fromLongPress = true;
             try {
                 speed_old = (float) mPlayerConfig.getDouble("sp");
@@ -959,7 +964,7 @@ public class VodController extends BaseController {
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_UP) {
             if (fromLongPress) {
-                fromLongPress =false;
+                fromLongPress = false;
                 try {
                     float speed = speed_old;
                     mPlayerConfig.put("sp", speed);
@@ -986,14 +991,14 @@ public class VodController extends BaseController {
         }
         return true;
     }
-    
+
     private class LockRunnable implements Runnable {
         @Override
         public void run() {
             mLockView.setVisibility(INVISIBLE);
         }
     }
-    
+
     @Override
     public boolean onBackPressed() {
         if (isClickBackBtn) {
