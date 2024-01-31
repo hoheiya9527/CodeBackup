@@ -74,6 +74,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvHomeRec;
     private TextView tvHistoryNum;
     private TextView tvFastSearchText;
+    private TextView tvIjkCachePlay;
     TextView tvLongPressSpeed;
 
     public static ModelSettingFragment newInstance() {
@@ -110,6 +111,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvHomeRec = findViewById(R.id.tvHomeRec);
         tvHistoryNum = findViewById(R.id.tvHistoryNum);
 
+        tvIjkCachePlay = findViewById(R.id.tvIjkCachePlay);
         tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
         tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "已打开" : "已关闭");
         tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
@@ -120,11 +122,12 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvScale.setText(PlayerHelper.getScaleName(Hawk.get(HawkConfig.PLAY_SCALE, 0)));
         tvPlay.setText(PlayerHelper.getPlayerName(Hawk.get(HawkConfig.PLAY_TYPE, 0)));
         tvRender.setText(PlayerHelper.getRenderName(Hawk.get(HawkConfig.PLAY_RENDER, 0)));
+        tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "开启" : "关闭");
 
         //隐私浏览
         SwitchMaterial switchPrivate = findViewById(R.id.switchPrivateBrowsing);
         switchPrivate.setChecked(Hawk.get(HawkConfig.PRIVATE_BROWSING, false));
-        findViewById(R.id.llPrivateBrowsing).setOnClickListener(view -> {
+        switchPrivate.setOnClickListener(view -> {
             boolean newConfig = !Hawk.get(HawkConfig.PRIVATE_BROWSING, false);
             switchPrivate.setChecked(newConfig);
             Hawk.put(HawkConfig.PRIVATE_BROWSING, newConfig);
@@ -186,33 +189,42 @@ public class ModelSettingFragment extends BaseLazyFragment {
         });
 
         tvLongPressSpeed = findViewById(R.id.tvSpeed);
-        tvLongPressSpeed.setText(String.valueOf(Hawk.get(HawkConfig.VIDEO_SPEED, 2.0f)));
+        float beforeSpeed = SPUtils.getInstance().getFloat(CacheConst.VIDEO_SPEED, 2.0f);
+        tvLongPressSpeed.setText(String.valueOf(beforeSpeed));
         findViewById(R.id.llPressSpeed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> types = new ArrayList<>();
-                types.add("2.0");
-                types.add("3.0");
-                types.add("4.0");
-                types.add("5.0");
-                types.add("6.0");
-                types.add("8.0");
-                types.add("10.0");
-                int defaultPos = types.indexOf(String.valueOf(Hawk.get(HawkConfig.VIDEO_SPEED, 2.0f)));
-                SelectDialog<String> dialog = new SelectDialog<>(mActivity);
+                String[] items = {"2.0", "3.0"};
+                int defaultPos = Arrays.asList(items).indexOf(String.valueOf(beforeSpeed));
+
+                ArrayList<Integer> types = new ArrayList<>();
+                types.add(0);
+                types.add(1);
+                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
                 dialog.setTip("请选择");
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
                     @Override
-                    public void click(String value, int pos) {
-                        Hawk.put(HawkConfig.VIDEO_SPEED,Float.parseFloat(value));
-                        tvLongPressSpeed.setText(value);
+                    public void click(Integer value, int pos) {
+                        SPUtils.getInstance().put(CacheConst.VIDEO_SPEED, Float.parseFloat(items[pos]));
+                        tvLongPressSpeed.setText(items[pos]);
+                        v.postDelayed(() -> dialog.dismiss(), 500);
                     }
 
                     @Override
-                    public String getDisplay(String val) {
-                        return val;
+                    public String getDisplay(Integer val) {
+                        return items[val];
                     }
-                }, SelectDialogAdapter.stringDiff, types, defaultPos);
+                }, new DiffUtil.ItemCallback<Integer>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+                }, types, defaultPos);
                 dialog.show();
             }
         });
@@ -616,6 +628,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
             }
         });
 
+        findViewById(R.id.llIjkCachePlay).setOnClickListener((view -> onClickIjkCachePlay(view)));
         findViewById(R.id.llClearCache).setOnClickListener((view -> {
             new XPopup.Builder(mActivity)
                     .isDarkTheme(Utils.isDarkTheme())
@@ -687,25 +700,12 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         }
                     }, null, R.layout.dialog_input).show();
         });
+    }
 
-        SwitchMaterial switchVideoPurify = findViewById(R.id.switchVideoPurify);
-        switchVideoPurify.setChecked(Hawk.get(HawkConfig.VIDEO_PURIFY, true));
-        // toggle purify video -------------------------------------
-        findViewById(R.id.llVideoPurify).setOnClickListener(v -> {
-            FastClickCheckUtil.check(v);
-            boolean newConfig = !Hawk.get(HawkConfig.VIDEO_PURIFY, true);
-            switchVideoPurify.setChecked(newConfig);
-            Hawk.put(HawkConfig.VIDEO_PURIFY, newConfig);
-        });
-
-        SwitchMaterial switchIjkCachePlay = findViewById(R.id.switchIjkCachePlay);
-        switchIjkCachePlay.setChecked(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false));
-        findViewById(R.id.llIjkCachePlay).setOnClickListener((v -> {
-            FastClickCheckUtil.check(v);
-            boolean newConfig = !Hawk.get(HawkConfig.IJK_CACHE_PLAY, false);
-            switchIjkCachePlay.setChecked(newConfig);
-            Hawk.put(HawkConfig.IJK_CACHE_PLAY, newConfig);
-        }));
+    private void onClickIjkCachePlay(View v) {
+        FastClickCheckUtil.check(v);
+        Hawk.put(HawkConfig.IJK_CACHE_PLAY, !Hawk.get(HawkConfig.IJK_CACHE_PLAY, false));
+        tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "开启" : "关闭");
     }
 
     private void onClickClearCache(View v) {

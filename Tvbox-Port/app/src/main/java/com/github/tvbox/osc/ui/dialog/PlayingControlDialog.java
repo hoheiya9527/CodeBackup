@@ -94,6 +94,10 @@ public class PlayingControlDialog extends BottomPopupView {
         mBinding.subtitle.setOnClickListener(view -> dismissWith(() -> changeAndUpdateText(null,mController.mZimuBtn)));
         mBinding.voice.setOnClickListener(view -> dismissWith(() -> changeAndUpdateText(null,mController.mAudioTrackBtn)));
         mBinding.download.setOnClickListener(view -> dismissWith(mDetailActivity::use1DMDownload));
+        mBinding.subtitle.setOnLongClickListener(view -> {
+            mController.hideSubtitle();
+            return true;
+        });
     }
 
     private void updateSkipText(boolean start){
@@ -141,6 +145,7 @@ public class PlayingControlDialog extends BottomPopupView {
      */
     public void updateAboutIjkVisible(){
         mBinding.decode.setVisibility(mController.mPlayerIJKBtn.getVisibility());
+        mBinding.voice.setVisibility(mController.mAudioTrackBtn.getVisibility());
     }
 
     /**

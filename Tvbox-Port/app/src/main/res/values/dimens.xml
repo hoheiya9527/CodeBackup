@@ -90,4 +90,5 @@
     <dimen name="dp_640">640dp</dimen>
     <dimen name="dp_720">720dp</dimen>
     <dimen name="dp_960">960dp</dimen>
+    <dimen name="sp_16">16sp</dimen>
 </resources>
