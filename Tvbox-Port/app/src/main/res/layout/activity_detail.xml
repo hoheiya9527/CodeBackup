@@ -53,11 +53,10 @@
                             android:maxLines="2"
                             android:ellipsize="end"
                             android:text="鬼灭之刃鬼灭之刃鬼灭之刃鬼灭之刃鬼灭之刃鬼灭之刃"
-                            android:textSize="18sp"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_gray"
                             />
-
 
                         <Space
                             android:layout_width="0dp"
@@ -167,7 +166,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/bg_gray"
-                        android:layout_marginVertical="10dp"/>
+                        android:layout_marginVertical="4dp"/>
                 </LinearLayout>
 
 
@@ -198,33 +197,79 @@
                         />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/parse_root"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="线路"
-                    android:textColor="@color/text_gray"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginTop="14dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    />
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="解析"
+                        android:textColor="@color/text_gray"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_centerVertical="true"
+                        />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_parse"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_select_flag" />
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="14dp"
+                    android:layout_marginTop="14dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="线路"
+                        android:textColor="@color/text_gray"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
+                        />
+                    <TextView
+                        android:id="@+id/tvChangeLine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="快捷换线"
+                        android:drawableRight="@drawable/ic_change_20"
+                        android:textColor="@color/text_gray"
+                        android:drawablePadding="4dp"
+                        android:paddingVertical="6dp"
+                        android:paddingLeft="20dp"
+                        android:layout_alignParentRight="true"
+                        />
+                </RelativeLayout>
                 <!--        线路列表-->
                 <com.owen.tvrecyclerview.widget.TvRecyclerView
                     android:id="@+id/mGridViewFlag"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_margin="10dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="4dp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     app:tv_horizontalSpacingWithMargins="@dimen/dp_10"
                     app:tv_selectedItemIsCentered="true"
-                    tools:listitem="@layout/item_series_flag" />
+                    tools:listitem="@layout/item_select_flag" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="14dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:gravity="center_vertical"
                     >
                     <TextView
@@ -275,7 +320,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginVertical="16dp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     app:tv_horizontalSpacingWithMargins="@dimen/dp_10"

@@ -5,12 +5,11 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId 'com.github.tvbox.osc.p'
+        applicationId 'com.github.tvbox.osc'
         minSdkVersion 24
-        //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 26
-        versionCode 1
-        versionName '1.0.0.'+new Date().format("yyyyMMdd")
+        targetSdkVersion 30
+        versionCode 29
+        versionName '1.0.9'
         multiDexEnabled true
         //设置room的Schema的位置
         javaCompileOptions {
@@ -29,9 +28,13 @@ android {
 
     // 执行配置
     applicationVariants.all { variant ->
+
         // Apk 输出配置
         variant.outputs.all { output ->
             outputFileName = 'MBox_v' + variant.versionName + '_' + variant.buildType.name
+            if (variant.buildType.name == buildTypes.release.getName()) {
+                outputFileName += '_' + new Date().format("yyyyMMdd")
+            }
             outputFileName += '.apk'
         }
     }
@@ -42,31 +45,27 @@ android {
     }
 
     signingConfigs {
-        debug {
-            storeFile file('D:\\UROVO\\key\\mkey')
-            storePassword '123456'
-            keyAlias 'lll'
+        config {
+            keyAlias 'key0'
             keyPassword '123456'
-        }
-        release {
-            storeFile file('D:\\UROVO\\key\\mkey')
+            storeFile file('test.jks')
             storePassword '123456'
-            keyAlias 'lll'
-            keyPassword '123456'
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
 
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled false
         }
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            minifyEnabled false
+            minifyEnabled true
         }
     }
 
