@@ -58,13 +58,15 @@ public class SSLSocketFactoryCompat extends SSLSocketFactory {
 
     public SSLSocketFactoryCompat() {
         try {
-            Provider provider = Conscrypt.newProvider();
-            Security.insertProviderAt(provider, 1);
-            SSLContext sslContext = SSLContext.getInstance("TLS", provider);
+//            Provider provider = Conscrypt.newProvider();
+//            Security.insertProviderAt(provider, 1);
+//            SSLContext sslContext = SSLContext.getInstance("TLS", provider);
+            SSLContext sslContext = SSLContext.getDefault();
             sslContext.init(null, new X509TrustManager[]{trustAllCert}, null);
             defaultFactory = sslContext.getSocketFactory();
             HttpsURLConnection.setDefaultSSLSocketFactory(defaultFactory);
         } catch (GeneralSecurityException e) {
+            e.printStackTrace();
             throw new AssertionError();
         }
     }

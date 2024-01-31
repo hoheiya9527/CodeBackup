@@ -285,7 +285,7 @@ public class HomeActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 if (!useCacheConfig)
-                                    Toast.makeText(HomeActivity.this, "自定义jar加载成功", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeActivity.this, "配置加载成功", Toast.LENGTH_SHORT).show();
                                 initData();
                             }
                         }, 50);
@@ -302,7 +302,7 @@ public class HomeActivity extends BaseActivity {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(HomeActivity.this, "jar加载失败", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeActivity.this, "配置加载失败，请重新打开应用重试", Toast.LENGTH_SHORT).show();
                                 initData();
                             }
                         });
@@ -311,8 +311,8 @@ public class HomeActivity extends BaseActivity {
             }
             return;
         }
-        //设定默认地址
-        setDefaultUrl();
+        //设定默认配置
+        setDefaultConfig();
         //
         ApiConfig.get().loadConfig(useCacheConfig, new ApiConfig.LoadConfigCallback() {
             TipDialog dialog = null;
@@ -404,11 +404,18 @@ public class HomeActivity extends BaseActivity {
         }, this);
     }
 
-    private void setDefaultUrl() {
+    /**
+     * 默认配置信息
+     */
+    private void setDefaultConfig() {
         String url = Hawk.get(HawkConfig.API_URL, "");
         if (TextUtils.isEmpty(url)){
             Hawk.put(HawkConfig.API_URL,URL_DEFAULT);//默认连接地址
             Hawk.put(HawkConfig.PLAY_RENDER, 1);//默认渲染-Surface
+            Hawk.put(HawkConfig.HOME_REC_STYLE, true);//首页多行
+            Hawk.put(HawkConfig.SEARCH_VIEW, 1);//搜索展示-缩略图
+            Hawk.put(HawkConfig.FAST_SEARCH_MODE, true);//聚合模式
+            Hawk.put(HawkConfig.IJK_CODEC, "硬解码");//
         }
     }
 

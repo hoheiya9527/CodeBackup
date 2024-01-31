@@ -33,7 +33,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 
 import okhttp3.internal.Util;
-import okhttp3.internal.Version;
+//import okhttp3.internal.Version;
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
@@ -71,7 +71,8 @@ public class OkGoHelper {
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
 
     public static List<ConnectionSpec> getConnectionSpec() {
-        return Util.immutableList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+//        return Util.immutableList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+        return Util.immutableListOf(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
     }
 
     public static String getDohUrl(int type) {
@@ -128,6 +129,7 @@ public class OkGoHelper {
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
         dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).build();
     }
+
     static OkHttpClient defaultClient = null;
     static OkHttpClient noRedirectClient = null;
 
@@ -166,7 +168,7 @@ public class OkGoHelper {
             th.printStackTrace();
         }
 
-        HttpHeaders.setUserAgent(Version.userAgent());
+//        HttpHeaders.setUserAgent(Version.userAgent());
 
         OkHttpClient okHttpClient = builder.build();
         OkGo.getInstance().setOkHttpClient(okHttpClient);
