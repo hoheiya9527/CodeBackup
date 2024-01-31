@@ -8,6 +8,7 @@ import com.github.tvbox.osc.bean.IpScanningVo;
 import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.IpScanning;
+import com.lzy.okgo.https.HttpsUtils;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.IOException;
@@ -130,6 +131,7 @@ public class RemoteTVBox {
         builder.readTimeout(1000, TimeUnit.MILLISECONDS);
         builder.writeTimeout(1000, TimeUnit.MILLISECONDS);
         builder.connectTimeout(1000, TimeUnit.MILLISECONDS);
+        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         OkHttpClient client = builder.build();
         FormBody.Builder formBodyBuilder = new FormBody.Builder();
         if (params != null && params.size() > 0) {

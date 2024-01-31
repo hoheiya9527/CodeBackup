@@ -9,6 +9,7 @@ import com.github.tvbox.osc.bean.SubtitleData;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
+import com.lzy.okgo.https.HttpsUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -207,6 +208,7 @@ public class SubtitleViewModel extends ViewModel {
                 .followRedirects(false)
                 .followSslRedirects(false)
                 .retryOnConnectionFailure(true);
+        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         OkHttpClient client = builder.build();
         client.newCall(request).enqueue(new Callback() {
             @Override

@@ -55,7 +55,7 @@ public class OkGoHelper {
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
-
+        builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         try {
             setOkHttpSsl(builder);
         } catch (Throwable th) {
@@ -125,6 +125,7 @@ public class OkGoHelper {
         }
         builder.connectionSpecs(getConnectionSpec());
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
+
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
         dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).build();
@@ -170,7 +171,7 @@ public class OkGoHelper {
 
 //        HttpHeaders.setUserAgent(Version.userAgent());
 
-        OkHttpClient okHttpClient = builder.build();
+        OkHttpClient okHttpClient = builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier).build();
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
         defaultClient = okHttpClient;
@@ -196,7 +197,6 @@ public class OkGoHelper {
 
     private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
-
             final SSLSocketFactory sslSocketFactory = new SSLSocketFactoryCompat();
             builder.sslSocketFactory(sslSocketFactory, SSLSocketFactoryCompat.trustAllCert);
             builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
