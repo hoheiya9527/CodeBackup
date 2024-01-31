@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
 
@@ -252,6 +253,7 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
     private TextView getTabTextView(String text){
         TextView textView = new TextView(mContext);
         textView.setText(text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(ConvertUtils.dp2px(20), ConvertUtils.dp2px(10), ConvertUtils.dp2px(5), ConvertUtils.dp2px(10));
         return textView;
