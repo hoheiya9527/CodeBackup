@@ -107,20 +107,20 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:focusable="true"
-                        android:text="样式一"
-                        android:shadowColor="@color/text_gray"
-                        android:shadowRadius="2"
-                        android:shadowDx="1"
-                        android:shadowDy="1"/>
+                        android:text="透明度减小"
+                        android:shadowColor="@color/text_gray"/>
 
                     <TextView
+                        android:id="@+id/tv_subtitle_transparent"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="60dp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_marginHorizontal="10dp"
-                        tools:text="在这"
+                        tools:text="0"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_gray"
                         android:textSize="16sp" />
 
                     <com.google.android.material.button.MaterialButton
@@ -130,13 +130,8 @@
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:focusable="true"
-                        android:text="样式二"
-                        android:textStyle="bold"
-                        android:textColor="@color/color_FFB6C1"
-                        android:shadowColor="@color/color_FFFFFF"
-                        android:shadowRadius="2"
-                        android:shadowDx="1"
-                        android:shadowDy="1" />
+                        android:text="透明度增加"
+                        android:shadowColor="@color/text_gray"/>
 
                 </LinearLayout>
 

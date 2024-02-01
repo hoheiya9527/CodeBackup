@@ -69,4 +69,5 @@ public class HawkConfig {
      * 搜索记录
      */
     public static final String HISTORY_SEARCH = "history_search";
+    public static final String SUBTITLE_TEXT_TRANSPARENT = "subtitle_text_transparent";
 }

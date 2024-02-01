@@ -99,8 +99,6 @@ import kotlin.jvm.functions.Function4;
 public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding> implements TextWatcher{
 
     SourceViewModel sourceViewModel;
-
-
     private FastSearchAdapter searchAdapter;
     private FastSearchAdapter searchAdapterFilter;
     private String searchTitle = "";

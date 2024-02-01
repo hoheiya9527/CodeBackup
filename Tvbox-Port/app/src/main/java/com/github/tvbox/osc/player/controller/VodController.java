@@ -33,6 +33,7 @@ import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.widget.MyBatteryView;
+import com.github.tvbox.osc.util.ColorUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.PlayerHelper;
@@ -685,6 +686,7 @@ public class VodController extends BaseController {
     void initSubtitleInfo() {
         int subtitleTextSize = SubtitleHelper.getTextSize(mActivity);
         mSubtitleView.setTextSize(subtitleTextSize);
+        mSubtitleView.setTextColor(ColorUtil.getSubtitleColor());
     }
 
     @Override

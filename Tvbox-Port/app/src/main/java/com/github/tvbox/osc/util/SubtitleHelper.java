@@ -38,4 +38,11 @@ public class SubtitleHelper {
         Hawk.put(HawkConfig.SUBTITLE_TIME_DELAY, delay);
     }
 
+    public static void setTextTransparent(int value) {
+        Hawk.put(HawkConfig.SUBTITLE_TEXT_TRANSPARENT, value);
+    }
+
+    public static int getTextTransparent() {
+        return Hawk.get(HawkConfig.SUBTITLE_TEXT_TRANSPARENT, 2);
+    }
 }

@@ -10,7 +10,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 26
         versionCode 1
-        versionName '1.0.1.'+new Date().format("yyyyMMdd")
+        versionName '1.0.2.' + new Date().format("yyyyMMdd")
         multiDexEnabled true
         //设置room的Schema的位置
         javaCompileOptions {
@@ -31,8 +31,7 @@ android {
     applicationVariants.all { variant ->
         // Apk 输出配置
         variant.outputs.all { output ->
-            outputFileName = 'MBox_v' + variant.versionName + '_' + variant.buildType.name
-            outputFileName += '.apk'
+            outputFileName = 'MBox_mod_hoheiya_v' + variant.versionName + '.apk'
         }
     }
 

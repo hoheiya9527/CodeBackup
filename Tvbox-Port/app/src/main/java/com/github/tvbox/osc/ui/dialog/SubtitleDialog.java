@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.ConvertUtils;
 import com.github.tvbox.osc.R;
+import com.github.tvbox.osc.util.ColorUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.SubtitleHelper;
 
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SubtitleDialog extends BaseDialog {
 
+    private static final int MAX_TRANSPARENT = 10;
     public TextView selectInternal;
     private TextView selectLocal;
     private TextView selectRemote;
@@ -36,6 +38,7 @@ public class SubtitleDialog extends BaseDialog {
     private SearchSubtitleListener mSearchSubtitleListener;
     private LocalFileChooserListener mLocalFileChooserListener;
     private SubtitleViewListener mSubtitleViewListener;
+    private TextView transparentTv;
 
     public SubtitleDialog(@NonNull @NotNull Context context) {
         super(context);
@@ -70,6 +73,8 @@ public class SubtitleDialog extends BaseDialog {
         subtitleTimePlus = findViewById(R.id.subtitleTimePlus);
         subtitleStyleOne = findViewById(R.id.subtitleStyleOne);
         subtitleStyleTwo = findViewById(R.id.subtitleStyleTwo);
+        transparentTv = findViewById(R.id.tv_subtitle_transparent);
+        transparentTv.setText(String.valueOf(SubtitleHelper.getTextTransparent()));
 
         selectLocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +129,7 @@ public class SubtitleDialog extends BaseDialog {
         int timeDelay = SubtitleHelper.getTimeDelay();
         String timeStr = "0";
         if (timeDelay != 0) {
-            double dbTimeDelay = timeDelay/1000;
+            double dbTimeDelay = timeDelay / 1000;
             timeStr = Double.toString(dbTimeDelay);
         }
         subtitleTimeText.setText(timeStr);
@@ -143,8 +148,8 @@ public class SubtitleDialog extends BaseDialog {
                     timeStr = Double.toString(time);
                 }
                 subtitleTimeText.setText(timeStr);
-                int mseconds = (int)(oneceDelay*1000);
-                SubtitleHelper.setTimeDelay((int)(time*1000));
+                int mseconds = (int) (oneceDelay * 1000);
+                SubtitleHelper.setTimeDelay((int) (time * 1000));
                 mSubtitleViewListener.setSubtitleDelay(mseconds);
             }
         });
@@ -162,8 +167,8 @@ public class SubtitleDialog extends BaseDialog {
                     timeStr = Double.toString(time);
                 }
                 subtitleTimeText.setText(timeStr);
-                int mseconds = (int)(oneceDelay*1000);
-                SubtitleHelper.setTimeDelay((int)(time*1000));
+                int mseconds = (int) (oneceDelay * 1000);
+                SubtitleHelper.setTimeDelay((int) (time * 1000));
                 mSubtitleViewListener.setSubtitleDelay(mseconds);
             }
         });
@@ -179,20 +184,22 @@ public class SubtitleDialog extends BaseDialog {
         subtitleStyleOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int style = 0;
-                dismiss();
-                mSubtitleViewListener.setTextStyle(style);
-                Toast.makeText(getContext(), "设置样式成功", Toast.LENGTH_SHORT).show();
+                subTransparent();
+//                int style = 0;
+//                dismiss();
+//                mSubtitleViewListener.setTextStyle(style);
+//                Toast.makeText(getContext(), "设置样式成功", Toast.LENGTH_SHORT).show();
             }
         });
 
         subtitleStyleTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int style = 1;
-                dismiss();
-                mSubtitleViewListener.setTextStyle(style);
-                Toast.makeText(getContext(), "设置样式成功", Toast.LENGTH_SHORT).show();
+                addTransparent();
+//                int style = 1;
+//                dismiss();
+//                mSubtitleViewListener.setTextStyle(style);
+//                Toast.makeText(getContext(), "设置样式成功", Toast.LENGTH_SHORT).show();
             }
         });
         findViewById(R.id.subtitleOpen).setOnClickListener(v -> {
@@ -203,6 +210,30 @@ public class SubtitleDialog extends BaseDialog {
             dismiss();
             mSubtitleViewListener.subtitleOpen(false);
         });
+    }
+
+    private void addTransparent() {
+        int textTransparent = SubtitleHelper.getTextTransparent();
+        if (textTransparent >= MAX_TRANSPARENT) {
+            Toast.makeText(getContext(), "透明度已为最高", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        textTransparent++;
+        SubtitleHelper.setTextTransparent(textTransparent);
+        transparentTv.setText(String.valueOf(SubtitleHelper.getTextTransparent()));
+        mSubtitleViewListener.setColor(ColorUtil.getSubtitleColor());
+    }
+
+    private void subTransparent() {
+        int textTransparent = SubtitleHelper.getTextTransparent();
+        if (textTransparent <= 0) {
+            Toast.makeText(getContext(), "透明度已为最低", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        textTransparent--;
+        SubtitleHelper.setTextTransparent(textTransparent);
+        transparentTv.setText(String.valueOf(SubtitleHelper.getTextTransparent()));
+        mSubtitleViewListener.setColor(ColorUtil.getSubtitleColor());
     }
 
     public void setLocalFileChooserListener(LocalFileChooserListener localFileChooserListener) {
@@ -227,9 +258,15 @@ public class SubtitleDialog extends BaseDialog {
 
     public interface SubtitleViewListener {
         void setTextSize(int size);
+
         void setSubtitleDelay(int milliseconds);
+
         void selectInternalSubtitle();
+
         void setTextStyle(int style);
+
         void subtitleOpen(boolean b);
+
+        void setColor(int color);
     }
 }
