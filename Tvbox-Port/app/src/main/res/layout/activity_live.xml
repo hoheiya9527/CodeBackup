@@ -203,7 +203,7 @@
 				android:paddingHorizontal="10dp"
 				android:scrollbars="none"
 				android:layout_gravity="center"
-				android:layout_marginLeft="40dp"
+				android:layout_marginLeft="10dp"
 				tools:listitem="@layout/item_live_channel_group_new"/>
 
 			<androidx.recyclerview.widget.RecyclerView
@@ -215,8 +215,7 @@
 				android:focusable="true"
 				android:listSelector="@drawable/item_bg_selector_right"
 				android:scrollbars="none"
-				android:layout_marginLeft="30dp"
-				android:layout_marginRight="40dp"
+				android:layout_marginRight="10dp"
 				tools:listitem="@layout/item_live_channel_new"
 				/>
 		</LinearLayout>

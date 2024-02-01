@@ -89,14 +89,18 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
 
         initViewModel();
 
-        //首次运行进行配置地址获取
-        showLoading();
+        initData();
+        //首次运行进行配置地址更新
         DocumentUtil.getTvboxUrl(
                 result -> {
-                    if (!TextUtils.isEmpty(result)) {
-                        Hawk.put(HawkConfig.API_URL, result);
+                    if (TextUtils.isEmpty(result)) {
+                        return;
                     }
-                    new Handler(Looper.getMainLooper()).post(() -> initData());
+                    String url = Hawk.get(HawkConfig.API_URL, "");
+                    if (!url.equals(result)){
+                        Hawk.put(HawkConfig.API_URL, result);
+                        ToastUtils.showLong("配置地址已重新配置，请重启应用以生效使用");
+                    }
                 });
         //
     }
@@ -138,7 +142,7 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                             @Override
                             public void run() {
                                 if (!mainActivity.useCacheConfig)
-                                    ToastUtils.showShort("更新订阅成功");
+                                    ToastUtils.showShort("配置加载完成");
                                 initData();
                             }
                         }, 50);
@@ -155,7 +159,7 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                ToastUtils.showShort("更新订阅失败");
+                                ToastUtils.showShort("配置加载失败");
                                 initData();
                             }
                         });

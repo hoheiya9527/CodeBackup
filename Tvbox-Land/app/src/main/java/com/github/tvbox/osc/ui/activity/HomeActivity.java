@@ -73,7 +73,7 @@ import java.util.List;
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
 public class HomeActivity extends BaseActivity {
-    private static final String URL_DEFAULT = "https://github.moeyy.xyz/https://github.com/hoheiya9527/TvboxSelf/blob/main/src.json";
+    private static final String URL_DEFAULT = "https://hub.gitmirror.com/https://raw.githubusercontent.com/hoheiya9527/TvboxSelf/main/src.json";
     private LinearLayout topLayout;
     private LinearLayout contentLayout;
     private TextView tvDate;
@@ -123,14 +123,21 @@ public class HomeActivity extends BaseActivity {
             Bundle bundle = intent.getExtras();
             useCacheConfig = bundle.getBoolean("useCache", false);
         }
-        //首次运行进行配置地址获取
-        showLoading();
+        //设定默认配置
+        setDefaultConfig();
+        //
+        initData();
+        //首次运行进行配置地址更新
         DocumentUtil.getTvboxUrl(
                 result -> {
-                    if (!TextUtils.isEmpty(result)) {
-                        Hawk.put(HawkConfig.API_URL, result);
+                    if (TextUtils.isEmpty(result)) {
+                        return;
                     }
-                    new Handler(Looper.getMainLooper()).post(() -> initData());
+                    String url = Hawk.get(HawkConfig.API_URL, "");
+                    if (!url.equals(result)){
+                        Hawk.put(HawkConfig.API_URL, result);
+                        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(HomeActivity.this,"配置已成功更新，请重启应用以生效使用",Toast.LENGTH_LONG).show());
+                    }
                 });
         //
     }
@@ -322,9 +329,6 @@ public class HomeActivity extends BaseActivity {
             }
             return;
         }
-        //设定默认配置
-        setDefaultConfig();
-        //
         ApiConfig.get().loadConfig(useCacheConfig, new ApiConfig.LoadConfigCallback() {
             TipDialog dialog = null;
 
