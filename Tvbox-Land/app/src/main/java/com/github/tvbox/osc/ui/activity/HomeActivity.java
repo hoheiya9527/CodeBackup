@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -49,6 +50,7 @@ import com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
 import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
@@ -121,7 +123,16 @@ public class HomeActivity extends BaseActivity {
             Bundle bundle = intent.getExtras();
             useCacheConfig = bundle.getBoolean("useCache", false);
         }
-        initData();
+        //首次运行进行配置地址获取
+        showLoading();
+        DocumentUtil.getTvboxUrl(
+                result -> {
+                    if (!TextUtils.isEmpty(result)) {
+                        Hawk.put(HawkConfig.API_URL, result);
+                    }
+                    new Handler(Looper.getMainLooper()).post(() -> initData());
+                });
+        //
     }
 
     private void initView() {

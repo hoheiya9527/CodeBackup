@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 
 import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.TipDialog;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
@@ -67,9 +70,9 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
         ControlManager.get().startServer();
 
         mBinding.nameContainer.setOnClickListener(v -> {
-            if(dataInitOk && jarInitOk){
+            if (dataInitOk && jarInitOk) {
                 showSiteSwitch();
-            }else {
+            } else {
                 ToastUtils.showShort("数据源未加载，长按刷新或切换订阅");
             }
         });
@@ -86,7 +89,16 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
 
         initViewModel();
 
-        initData();
+        //首次运行进行配置地址获取
+        showLoading();
+        DocumentUtil.getTvboxUrl(
+                result -> {
+                    if (!TextUtils.isEmpty(result)) {
+                        Hawk.put(HawkConfig.API_URL, result);
+                    }
+                    new Handler(Looper.getMainLooper()).post(() -> initData());
+                });
+        //
     }
 
 
@@ -104,13 +116,11 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
     }
 
     private void initData() {
-
-        MainActivity mainActivity = (MainActivity)mActivity;
-
+        MainActivity mainActivity = (MainActivity) mActivity;
         SourceBean home = ApiConfig.get().getHomeSourceBean();
-        if (home != null && home.getName() != null && !home.getName().isEmpty()){
+        if (home != null && home.getName() != null && !home.getName().isEmpty()) {
             mBinding.tvName.setText(home.getName());
-            mBinding.tvName.postDelayed(() -> mBinding.tvName.setSelected(true),2000);
+            mBinding.tvName.postDelayed(() -> mBinding.tvName.setSelected(true), 2000);
         }
         if (dataInitOk && jarInitOk) {
             showLoading();
@@ -250,10 +260,10 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
         }, getActivity());
     }
 
-    private TextView getTabTextView(String text){
+    private TextView getTabTextView(String text) {
         TextView textView = new TextView(mContext);
         textView.setText(text);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(ConvertUtils.dp2px(20), ConvertUtils.dp2px(10), ConvertUtils.dp2px(5), ConvertUtils.dp2px(10));
         return textView;
@@ -277,7 +287,7 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                 }
             }
 
-            if (Hawk.get(HawkConfig.HOME_REC, 0) == 2){//关闭主页
+            if (Hawk.get(HawkConfig.HOME_REC, 0) == 2) {//关闭主页
                 mBinding.tabLayout.removeViewAt(0);
                 fragments.remove(0);
             }
@@ -296,18 +306,18 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                 }
             });
             //tab和vp绑定
-            ViewPager1Delegate.Companion.install(mBinding.mViewPager, mBinding.tabLayout,true);
+            ViewPager1Delegate.Companion.install(mBinding.mViewPager, mBinding.tabLayout, true);
         }
     }
 
     /**
      * 提供给主页返回操作
      */
-    public boolean scrollToFirstTab(){
-        if (mBinding.tabLayout.getCurrentItemIndex()!=0){
+    public boolean scrollToFirstTab() {
+        if (mBinding.tabLayout.getCurrentItemIndex() != 0) {
             mBinding.mViewPager.setCurrentItem(0, false);
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -315,14 +325,14 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
     /**
      * 提供给主页返回操作
      */
-    public int getTabIndex(){
+    public int getTabIndex() {
         return mBinding.tabLayout.getCurrentItemIndex();
     }
 
     /**
      * 提供给主页返回操作
      */
-    public List<BaseLazyFragment> getAllFragments(){
+    public List<BaseLazyFragment> getAllFragments() {
         return fragments;
     }
 
@@ -365,12 +375,12 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                 }
             }, sites, sites.indexOf(ApiConfig.get().getHomeSourceBean()));
             dialog.show();
-        }else {
+        } else {
             ToastUtils.showLong("暂无可用数据源");
         }
     }
 
-    private void refreshHomeSouces(){
+    private void refreshHomeSouces() {
         Intent intent = new Intent(App.getInstance(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle = new Bundle();
