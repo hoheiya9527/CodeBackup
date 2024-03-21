@@ -1,18 +1,23 @@
 package com.github.tvbox.osc.util;
 
 
+import android.text.TextUtils;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.GZIPOutputStream;
 
 public class StringUtils {
 
-    public static boolean isEmpty( CharSequence str) {
+    public static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;
     }
 
-    public static boolean isNotEmpty( CharSequence str) {
+    public static boolean isNotEmpty(CharSequence str) {
         return !isEmpty(str);
     }
 
@@ -25,11 +30,16 @@ public class StringUtils {
     }
 
     public static boolean isEmpty(Object obj) {
-        if (obj == null) return true;
-        else if (obj instanceof CharSequence) return ((CharSequence) obj).length() == 0;
-        else if (obj instanceof Collection) return ((Collection) obj).isEmpty();
-        else if (obj instanceof Map) return ((Map) obj).isEmpty();
-        else if (obj.getClass().isArray()) return Array.getLength(obj) == 0;
+        if (obj == null)
+            return true;
+        else if (obj instanceof CharSequence)
+            return ((CharSequence) obj).length() == 0;
+        else if (obj instanceof Collection)
+            return ((Collection) obj).isEmpty();
+        else if (obj instanceof Map)
+            return ((Map) obj).isEmpty();
+        else if (obj.getClass().isArray())
+            return Array.getLength(obj) == 0;
 
         return false;
     }
@@ -38,22 +48,20 @@ public class StringUtils {
         return !isEmpty(obj);
     }
 
-    private static final String U2028 = new String(new byte[]{ (byte)0xE2, (byte)0x80, (byte)0xA8 });
-    private static final String U2029 = new String(new byte[]{ (byte)0xE2, (byte)0x80, (byte)0xA9 });
+    private static final String U2028 = new String(new byte[]{(byte) 0xE2, (byte) 0x80, (byte) 0xA8});
+    private static final String U2029 = new String(new byte[]{(byte) 0xE2, (byte) 0x80, (byte) 0xA9});
 
     /**
      * Escape JavaString string
+     *
      * @param line unescaped string
      * @return escaped string
      */
-    public static String escapeJavaScriptString(final String line)
-    {
+    public static String escapeJavaScriptString(final String line) {
         final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < line.length(); i++)
-        {
+        for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
-            switch (c)
-            {
+            switch (c) {
                 case '"':
                 case '\'':
                 case '\\':
@@ -74,9 +82,7 @@ public class StringUtils {
             }
         }
 
-        return sb.toString()
-                .replace(U2028, "\u2028")
-                .replace(U2029, "\u2029");
+        return sb.toString().replace(U2028, "\u2028").replace(U2029, "\u2029");
     }
 
     public static String getBaseUrl(String url) {
@@ -164,4 +170,23 @@ public class StringUtils {
         return ((st > 0) || (len < str.length())) ? str.substring(st, len) : str;
     }
 
+    public static String filterStr(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        String toFind = "公众|神秘的哥哥|WX|微信";
+        String regex = "([^" + toFind + "]+)?";
+        Pattern compile = Pattern.compile(regex);
+        Matcher matcher = compile.matcher(str);
+        if (matcher.find(0)) {
+            String group = matcher.group();
+            if (!TextUtils.isEmpty(group)) {
+                return group;
+            }
+            System.out.println("==filterStr==group=" + group);
+        } else {
+            System.out.println("==filterStr==Not Found");
+        }
+        return str;
+    }
 }

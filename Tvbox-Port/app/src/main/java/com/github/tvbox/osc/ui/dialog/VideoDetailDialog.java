@@ -16,6 +16,7 @@ import com.github.tvbox.osc.picasso.RoundTransformation;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.MD5;
+import com.github.tvbox.osc.util.StringUtils;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.util.SmartGlideImageLoader;
@@ -56,8 +57,7 @@ public class VideoDetailDialog extends BottomPopupView {
     protected void onCreate() {
         super.onCreate();
         DialogVideoDetailBinding binding = DialogVideoDetailBinding.bind(getPopupImplView());
-
-        binding.tvName.setText(mVideo.name);
+        binding.tvName.setText(StringUtils.filterStr(mVideo.name));
         binding.tvYear.setText("年份："+(mVideo.year == 0 ? "" : String.valueOf(mVideo.year)));
         binding.tvArea.setText("地区："+getText(mVideo.area));
         binding.tvType.setText("类型："+getText(mVideo.type));
