@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -799,43 +800,46 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
 
         String epgUrl;
+        epgTagName = epgTagName.replaceAll(" ", "");
         if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
             epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
         } else {
             epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
         }
-        OkGo.<String>get(epgUrl).execute(new StringCallback() {
-            public void onSuccess(Response<String> response) {
-                String paramString = response.body();
-                ArrayList arrayList = new ArrayList();
-
-                try {
-                    if (paramString.contains("epg_data")) {
-                        final JSONArray jSONArray = new JSONObject(paramString).optJSONArray("epg_data");
-                        if (jSONArray != null)
-                            for (int b = 0; b < jSONArray.length(); b++) {
-                                JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
-                                arrayList.add(epgbcinfo);
+        Log.d("test", ">> epg url==" + epgUrl);
+        OkGo.<String>get(epgUrl).execute(
+                new StringCallback() {
+                    public void onSuccess(Response<String> response) {
+                        String paramString = response.body();
+                        ArrayList arrayList = new ArrayList();
+                        try {
+                            if (paramString.contains("epg_data")) {
+                                final JSONArray jSONArray = new JSONObject(paramString).optJSONArray("epg_data");
+                                if (jSONArray != null)
+                                    for (int b = 0; b < jSONArray.length(); b++) {
+                                        JSONObject jSONObject = jSONArray.getJSONObject(b);
+                                        Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
+                                        arrayList.add(epgbcinfo);
+                                    }
                             }
+                        } catch (JSONException jSONException) {
+                            jSONException.printStackTrace();
+                        }
+                        showEpg(date, arrayList);
+
+                        String savedEpgKey = channelName + "_" + epgDateAdapter.getItem(epgDateAdapter.getSelectedIndex()).getDatePresented();
+                        if (!hsEpg.contains(savedEpgKey))
+                            hsEpg.put(savedEpgKey, arrayList);
+                        showBottomEpg();
                     }
 
-                } catch (JSONException jSONException) {
-                    jSONException.printStackTrace();
+                    public void onFailure(int i, String str) {
+                        showEpg(date, new ArrayList());
+                        showBottomEpg();
+                    }
                 }
-                showEpg(date, arrayList);
 
-                String savedEpgKey = channelName + "_" + epgDateAdapter.getItem(epgDateAdapter.getSelectedIndex()).getDatePresented();
-                if (!hsEpg.contains(savedEpgKey))
-                    hsEpg.put(savedEpgKey, arrayList);
-                showBottomEpg();
-            }
-
-            public void onFailure(int i, String str) {
-                showEpg(date, new ArrayList());
-                showBottomEpg();
-            }
-        });
+        );
     }
 
     private boolean replayChannel() {
