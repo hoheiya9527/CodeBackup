@@ -30,7 +30,7 @@ public class DocumentUtil {
                             .get();
 //                  System.out.println(document);
                     Elements elements = document.select("div#" + tag);
-                    if (elements.size() == 0) {
+                    if (elements.isEmpty()) {
                         System.out.println(tag + " url is Empty");
                         callBack.over("");
                     } else {

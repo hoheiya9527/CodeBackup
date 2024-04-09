@@ -1175,6 +1175,7 @@ public class PlayFragment extends BaseLazyFragment {
 
     public void play(boolean reset) {
     	if (mVodInfo == null) return;
+        mVodInfo.name = com.github.tvbox.osc.util.StringUtils.filterStr(mVodInfo.name);
         VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.getplayIndex());
         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_REFRESH, mVodInfo.getplayIndex()));
         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_REFRESH_NOTIFY, mVodInfo.name + "&&" + vs.name));

@@ -1,18 +1,22 @@
 package com.github.tvbox.osc.util;
 
 
+import android.text.TextUtils;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils {
 
-    public static boolean isEmpty( CharSequence str) {
+    public static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;
     }
 
-    public static boolean isNotEmpty( CharSequence str) {
+    public static boolean isNotEmpty(CharSequence str) {
         return !isEmpty(str);
     }
 
@@ -38,22 +42,20 @@ public class StringUtils {
         return !isEmpty(obj);
     }
 
-    private static final String U2028 = new String(new byte[]{ (byte)0xE2, (byte)0x80, (byte)0xA8 });
-    private static final String U2029 = new String(new byte[]{ (byte)0xE2, (byte)0x80, (byte)0xA9 });
+    private static final String U2028 = new String(new byte[]{(byte) 0xE2, (byte) 0x80, (byte) 0xA8});
+    private static final String U2029 = new String(new byte[]{(byte) 0xE2, (byte) 0x80, (byte) 0xA9});
 
     /**
      * Escape JavaString string
+     *
      * @param line unescaped string
      * @return escaped string
      */
-    public static String escapeJavaScriptString(final String line)
-    {
+    public static String escapeJavaScriptString(final String line) {
         final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < line.length(); i++)
-        {
+        for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
-            switch (c)
-            {
+            switch (c) {
                 case '"':
                 case '\'':
                 case '\\':
@@ -215,5 +217,25 @@ public class StringUtils {
             }
         }
         return result;
+    }
+
+    public static String filterStr(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        String toFind = "公众|神秘的哥哥|WX|微信";
+        String regex = "([^" + toFind + "]+)?";
+        Pattern compile = Pattern.compile(regex);
+        Matcher matcher = compile.matcher(str);
+        if (matcher.find(0)) {
+            String group = matcher.group();
+            if (!TextUtils.isEmpty(group)) {
+                return group;
+            }
+            System.out.println("==filterStr==group=" + group);
+        } else {
+            System.out.println("==filterStr==Not Found");
+        }
+        return str;
     }
 }
