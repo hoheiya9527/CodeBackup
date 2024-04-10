@@ -379,7 +379,7 @@ public class ApiConfig {
         // takagen99: Check if Live URL is setup in Settings, if no, get from File Config
         liveChannelGroupList.clear();           //修复从后台切换重复加载频道列表
         String liveURL = Hawk.get(HawkConfig.LIVE_URL, "");
-        String epgURL  = Hawk.get(HawkConfig.EPG_URL, "");
+        String epgURL = Hawk.get(HawkConfig.EPG_URL, "");
 
         String liveURL_final = null;
         try {
@@ -435,6 +435,11 @@ public class ApiConfig {
                             Hawk.put(HawkConfig.EPG_URL, epgURL);
                         }
                     }
+                    if (livesOBJ.has("logo")) {
+                        String epg = livesOBJ.get("logo").getAsString();
+                        System.out.println("Live LOGO URL :" + epg);
+                        Hawk.put(HawkConfig.LIVE_LOGO_URL, epg);
+                    }
 
 //                // Populate Live Channel Listing
 //                LiveChannelGroup liveChannelGroup = new LiveChannelGroup();
@@ -465,7 +470,11 @@ public class ApiConfig {
                                     Hawk.put(HawkConfig.EPG_URL, epgURL);
                                 }
                             }
-
+                            if (fengMiLives.has("logo")) {
+                                String epg = livesOBJ.get("logo").getAsString();
+                                System.out.println("Live LOGO URL :" + epg);
+                                Hawk.put(HawkConfig.LIVE_LOGO_URL, epg);
+                            }
                             if (url.startsWith("http")) {
                                 // takagen99: Capture Live URL into Settings
                                 System.out.println("Live URL :" + url);
@@ -505,7 +514,7 @@ public class ApiConfig {
         // Video parse rule for host
         if (infoJson.has("rules")) {
             VideoParseRuler.clearRule();
-            for(JsonElement oneHostRule : infoJson.getAsJsonArray("rules")) {
+            for (JsonElement oneHostRule : infoJson.getAsJsonArray("rules")) {
                 JsonObject obj = (JsonObject) oneHostRule;
                 if (obj.has("host")) {
                     String host = obj.get("host").getAsString();

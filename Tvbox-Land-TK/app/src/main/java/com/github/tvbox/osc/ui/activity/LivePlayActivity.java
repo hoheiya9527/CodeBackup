@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -783,6 +784,14 @@ public class LivePlayActivity extends BaseActivity {
         RequestOptions options = new RequestOptions();
         options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .placeholder(R.drawable.img_logo_placeholder);
+        if (TextUtils.isEmpty(logoUrl)) {
+            String url = Hawk.get(HawkConfig.LIVE_LOGO_URL, "https://epg.112114.xyz/logo/{name}.png");
+            if (!TextUtils.isEmpty(url)) {
+                channelName = channelName.replaceAll(" ", "");
+                logoUrl = url.replace("{name}", channelName);
+            }
+        }
+        Log.d("test", ">> logoUrl:" + logoUrl);
         Glide.with(App.getInstance())
                 .load(logoUrl)
                 .apply(options)

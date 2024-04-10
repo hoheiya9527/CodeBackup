@@ -19,13 +19,12 @@ public class EpgUtil {
     private static HashMap<String, JsonObject> epgHashMap = new HashMap<>();
 
     public static void init() {
-        if (epgDoc != null)
-            return;
+        if (epgDoc != null) return;
 
         //credit by 龍
         try {
             AssetManager assetManager = App.getInstance().getAssets(); //获得assets资源管理器（assets中的文件无法直接访问，可以使用AssetManager访问）
-            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("epg_data.json"),"UTF-8"); //使用IO流读取json文件内容
+            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("epg_data.json"), "UTF-8"); //使用IO流读取json文件内容
             BufferedReader br = new BufferedReader(inputStreamReader);//使用字符高效流
             String line;
             StringBuilder builder = new StringBuilder();
@@ -55,10 +54,7 @@ public class EpgUtil {
         try {
             if (epgHashMap.containsKey(channelName)) {
                 JsonObject obj = epgHashMap.get(channelName);
-                return new String[]{
-                        obj.get("logo").getAsString(),
-                        obj.get("epgid").getAsString()
-                };
+                return new String[]{obj.get("logo").getAsString(), obj.get("epgid").getAsString()};
             }
         } catch (Exception ex) {
             ex.printStackTrace();
