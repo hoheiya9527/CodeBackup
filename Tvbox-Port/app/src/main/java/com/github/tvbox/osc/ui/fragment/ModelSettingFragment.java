@@ -12,17 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.github.tvbox.osc.BuildConfig;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.IJKCode;
-import com.github.tvbox.osc.constant.CacheConst;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.thirdparty.RemoteTVBox;
-
 import com.github.tvbox.osc.ui.activity.MainActivity;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
@@ -44,7 +41,6 @@ import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnInputConfirmListener;
 import com.orhanobut.hawk.Hawk;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,7 +48,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -172,7 +167,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 public boolean areContentsTheSame(@NonNull @NotNull String oldItem, @NonNull @NotNull String newItem) {
                     return oldItem.equals(newItem);
                 }
-            }, bgPlayTypes,defaultBgPlayTypePos);
+            }, bgPlayTypes, defaultBgPlayTypePos);
             dialog.show();
         });
 
@@ -204,7 +199,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
                     @Override
                     public void click(String value, int pos) {
-                        Hawk.put(HawkConfig.VIDEO_SPEED,Float.parseFloat(value));
+                        Hawk.put(HawkConfig.VIDEO_SPEED, Float.parseFloat(value));
                         tvLongPressSpeed.setText(value);
                     }
 
@@ -625,7 +620,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         }));
 
         View theme = findViewById(R.id.llTheme);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             theme.setVisibility(View.GONE);
         }
         int oldTheme = Hawk.get(HawkConfig.THEME_TAG, 0);
@@ -676,13 +671,13 @@ public class ModelSettingFragment extends BaseLazyFragment {
             dialog.show();
         }));
 
-        findViewById(R.id.llTMDB).setVisibility(BuildConfig.DEBUG?View.VISIBLE:View.GONE);
+        findViewById(R.id.llTMDB).setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
         findViewById(R.id.llTMDB).setOnClickListener(view -> {
             String token = Hawk.get(HawkConfig.TOKEN_TMDB, "");
             new XPopup.Builder(mActivity)
                     .asInputConfirm("IMDB", "", token, "请录入token,不必带Bearer", text -> {
-                        if (!TextUtils.isEmpty(text)){
-                            Hawk.put(HawkConfig.TOKEN_TMDB,text);
+                        if (!TextUtils.isEmpty(text)) {
+                            Hawk.put(HawkConfig.TOKEN_TMDB, text);
                             ToastUtils.showShort("设置成功");
                         }
                     }, null, R.layout.dialog_input).show();

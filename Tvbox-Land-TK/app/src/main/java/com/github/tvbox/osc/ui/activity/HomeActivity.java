@@ -387,7 +387,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void initData() {
-
         // takagen99 : Switch to show / hide source title
         SourceBean home = ApiConfig.get().getHomeSourceBean();
         if (HomeShow) {

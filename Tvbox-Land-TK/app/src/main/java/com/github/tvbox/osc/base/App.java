@@ -138,10 +138,10 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.DOH_URL, 0);                   //安全DNS: 0=关闭, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=AdGuard, 6=Quad9
 
         //
-        Hawk.put(HawkConfig.API_URL, URL_DEFAULT);//默认连接地址
-        Hawk.put(HawkConfig.PLAY_RENDER, 1);//默认渲染-Surface
-        Hawk.put(HawkConfig.HOME_REC_STYLE, true);//首页多行
-        Hawk.put(HawkConfig.FAST_SEARCH_MODE, true);//聚合模式
+        putDefault(HawkConfig.API_URL, URL_DEFAULT);//默认连接地址
+        putDefault(HawkConfig.PLAY_RENDER, 1);//默认渲染-Surface
+        putDefault(HawkConfig.HOME_REC_STYLE, true);//首页多行
+        putDefault(HawkConfig.FAST_SEARCH_MODE, true);//聚合模式
     }
 
     private void initLocale() {
