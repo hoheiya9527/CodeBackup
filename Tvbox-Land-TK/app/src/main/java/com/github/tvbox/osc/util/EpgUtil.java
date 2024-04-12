@@ -52,6 +52,7 @@ public class EpgUtil {
 
     public static String[] getEpgInfo(String channelName) {
         try {
+            channelName = channelName.replaceAll(" ", "");
             if (epgHashMap.containsKey(channelName)) {
                 JsonObject obj = epgHashMap.get(channelName);
                 return new String[]{obj.get("logo").getAsString(), obj.get("epgid").getAsString()};

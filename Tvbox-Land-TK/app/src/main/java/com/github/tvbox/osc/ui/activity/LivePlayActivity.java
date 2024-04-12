@@ -799,7 +799,6 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     public void getEpg(Date date) {
-
         String channelName = channel_Name.getChannelName();
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
