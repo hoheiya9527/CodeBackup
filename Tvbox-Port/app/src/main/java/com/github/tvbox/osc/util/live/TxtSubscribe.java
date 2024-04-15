@@ -5,12 +5,67 @@ import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TxtSubscribe {
+    private static final Pattern NAME_PATTERN = Pattern.compile(".*,(.+?)$");
+    private static final Pattern GROUP_PATTERN = Pattern.compile("group-title=\"(.*?)\"");
+
     public static void parse(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap, String str) {
+        if (str.startsWith("#EXTM3U")) {
+            parseM3u(linkedHashMap, str);
+        } else {
+            parseTxt(linkedHashMap, str);
+        }
+    }
+
+    private static void parseM3u(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap, String str) {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new StringReader(str));
+            LinkedHashMap<String, ArrayList<String>> channelTemp;//频道名>>源
+            ArrayList<String> urls = null;//源
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.isEmpty()) continue;
+                if (line.startsWith("#EXTM3U")) continue;
+                if (line.startsWith("#EXTINF")) {
+                    String name = getStrByRegex(NAME_PATTERN, line);
+                    String group = getStrByRegex(GROUP_PATTERN, line);
+                    if (linkedHashMap.containsKey(group)) {
+                        channelTemp = linkedHashMap.get(group);
+                        if (channelTemp == null) {
+                            channelTemp = new LinkedHashMap<>();
+                        }
+                    } else {
+                        channelTemp = new LinkedHashMap<>();
+                        linkedHashMap.put(group, channelTemp);
+                    }
+                    if (channelTemp.containsKey(name)) {
+                        urls = channelTemp.get(name);
+                    } else {
+                        urls = new ArrayList<>();
+                        channelTemp.put(name, urls);
+                    }
+                } else if (!line.startsWith("#EXT")) {//多条源开始获取
+                    if (urls != null && !urls.contains(line)) urls.add(line);
+                }
+            }
+            bufferedReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getStrByRegex(Pattern pattern, String line) {
+        Matcher matcher = pattern.matcher(line);
+        if (matcher.find()) return matcher.group(1);
+        return pattern.pattern().equals(GROUP_PATTERN.pattern()) ? "未分组" : "未命名";
+    }
+
+    public static void parseTxt(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap, String str) {
         ArrayList<String> arrayList;
         try {
             BufferedReader bufferedReader = new BufferedReader(new StringReader(str));

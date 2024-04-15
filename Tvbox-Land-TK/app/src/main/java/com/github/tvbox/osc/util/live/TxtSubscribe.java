@@ -25,38 +25,37 @@ public class TxtSubscribe {
     }
 
     private static void parseM3u(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap, String str) {
-        ArrayList<String> urls;
         try {
             BufferedReader bufferedReader = new BufferedReader(new StringReader(str));
-            LinkedHashMap<String, ArrayList<String>> channel = new LinkedHashMap<>();
-            LinkedHashMap<String, ArrayList<String>> channelTemp = channel;
+            LinkedHashMap<String, ArrayList<String>> channelTemp;//频道名>>源
+            ArrayList<String> urls = null;//源
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.equals("")) continue;
+                if (line.isEmpty()) continue;
                 if (line.startsWith("#EXTM3U")) continue;
                 if (line.startsWith("#EXTINF")) {
                     String name = getStrByRegex(NAME_PATTERN, line);
                     String group = getStrByRegex(GROUP_PATTERN, line);
-                    // 此时再读取一行，就是对应的 url 链接了
-                    String url = bufferedReader.readLine().trim();
                     if (linkedHashMap.containsKey(group)) {
                         channelTemp = linkedHashMap.get(group);
+                        if (channelTemp == null) {
+                            channelTemp = new LinkedHashMap<>();
+                        }
                     } else {
                         channelTemp = new LinkedHashMap<>();
                         linkedHashMap.put(group, channelTemp);
                     }
-                    if (null != channelTemp && channelTemp.containsKey(name)) {
+                    if (channelTemp.containsKey(name)) {
                         urls = channelTemp.get(name);
                     } else {
                         urls = new ArrayList<>();
                         channelTemp.put(name, urls);
                     }
-                    if (null != urls && !urls.contains(url)) urls.add(url);
+                } else if (!line.startsWith("#EXT")) {//多条源开始获取
+                    if (urls != null && !urls.contains(line)) urls.add(line);
                 }
             }
             bufferedReader.close();
-            if (channel.isEmpty()) return;
-            linkedHashMap.put("未分组", channel);
         } catch (Exception e) {
             e.printStackTrace();
         }
