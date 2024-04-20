@@ -1748,6 +1748,7 @@ public class LivePlayActivity extends BaseActivity {
             return;
         }
         showLoading();
+        Log.d("test", "==loadProxyLives==url:" + url);
         OkGo.<String>get(url).execute(new AbsCallback<String>() {
 
             @Override
@@ -1757,11 +1758,11 @@ public class LivePlayActivity extends BaseActivity {
 
             @Override
             public void onSuccess(Response<String> response) {
+                Log.d("test", "==loadProxyLives==onSuccess");
                 JsonArray livesArray;
                 LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap = new LinkedHashMap<>();
                 TxtSubscribe.parse(linkedHashMap, response.body());
                 livesArray = TxtSubscribe.live2JsonArray(linkedHashMap);
-
                 ApiConfig.get().loadLives(livesArray);
                 List<LiveChannelGroup> list = ApiConfig.get().getChannelGroupList();
                 if (list.isEmpty()) {
@@ -1784,6 +1785,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
+                Log.d("test", "==loadProxyLives==onError");
                 Toast.makeText(App.getInstance(), getString(R.string.act_live_play_network_error), Toast.LENGTH_LONG).show();
                 finish();
             }

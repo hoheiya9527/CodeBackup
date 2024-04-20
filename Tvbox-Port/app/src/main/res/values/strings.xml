@@ -21,6 +21,8 @@
         \n请不要相信任何订阅中以任何形势出现的任何广告。
         \n本应用不采集任何用户信息，如果您发现任何违规订阅，请立即删除。
              </string>
+    <string name="url_main">主地址</string>
+    <string name="url_backup">备用地址</string>
 
     <string-array name="doh_name">
         <item>System</item>

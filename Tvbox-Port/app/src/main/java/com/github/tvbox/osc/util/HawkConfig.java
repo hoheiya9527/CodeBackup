@@ -70,4 +70,5 @@ public class HawkConfig {
      */
     public static final String HISTORY_SEARCH = "history_search";
     public static final String SUBTITLE_TEXT_TRANSPARENT = "subtitle_text_transparent";
+    public static final String IS_URL_BACKUP = "is_url_backup";
 }

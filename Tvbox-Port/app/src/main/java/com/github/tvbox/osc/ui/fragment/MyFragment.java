@@ -2,32 +2,38 @@ package com.github.tvbox.osc.ui.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
+
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.ClipboardUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.github.tvbox.osc.R;
-import com.github.tvbox.osc.base.BaseLazyFragment;
+import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseVbFragment;
 import com.github.tvbox.osc.databinding.FragmentMyBinding;
 import com.github.tvbox.osc.ui.activity.CollectActivity;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.activity.HistoryActivity;
 import com.github.tvbox.osc.ui.activity.LiveActivity;
-import com.github.tvbox.osc.ui.activity.LivePlayActivity;
-import com.github.tvbox.osc.ui.activity.LocalPlayActivity;
+import com.github.tvbox.osc.ui.activity.MainActivity;
 import com.github.tvbox.osc.ui.activity.MovieFoldersActivity;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.activity.SubscriptionActivity;
 import com.github.tvbox.osc.ui.dialog.AboutDialog;
-import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.DocumentUtil;
+import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.Utils;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.interfaces.OnInputConfirmListener;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,12 +48,12 @@ public class MyFragment extends BaseVbFragment<FragmentMyBinding> {
 
     @Override
     protected void init() {
-        mBinding.tvVersion.setText("v"+ AppUtils.getAppVersionName());
+        mBinding.tvVersion.setText("v" + AppUtils.getAppVersionName());
 
-        mBinding.addrPlay.setOnClickListener(v ->{
+        mBinding.addrPlay.setOnClickListener(v -> {
             new XPopup.Builder(getContext())
-                    .asInputConfirm("播放", "", isPush(ClipboardUtils.getText().toString())?ClipboardUtils.getText():"", "地址", text -> {
-                        if (!TextUtils.isEmpty(text)){
+                    .asInputConfirm("播放", "", isPush(ClipboardUtils.getText().toString()) ? ClipboardUtils.getText() : "", "地址", text -> {
+                        if (!TextUtils.isEmpty(text)) {
                             Intent newIntent = new Intent(mContext, DetailActivity.class);
                             newIntent.putExtra("id", text);
                             newIntent.putExtra("sourceKey", "push_agent");
@@ -58,7 +64,14 @@ public class MyFragment extends BaseVbFragment<FragmentMyBinding> {
         });
         //mBinding.tvLive.setOnClickListener(v -> jumpActivity(LivePlayActivity.class));
         mBinding.tvLive.setOnClickListener(v -> jumpActivity(LiveActivity.class));
-
+        mBinding.llUrlSwitch.setOnClickListener(view -> {
+            Hawk.put(HawkConfig.IS_URL_BACKUP, !Hawk.get(HawkConfig.IS_URL_BACKUP, false));
+            mBinding.tvUrlSwitch.setText(Hawk.get(HawkConfig.IS_URL_BACKUP, false) ?
+                    getString(R.string.url_backup) : getString(R.string.url_main));
+            updateUrl();
+        });
+        mBinding.tvUrlSwitch.setText(Hawk.get(HawkConfig.IS_URL_BACKUP, false) ?
+                getString(R.string.url_backup) : getString(R.string.url_main));
         mBinding.tvSetting.setOnClickListener(v -> jumpActivity(SettingActivity.class));
 
         mBinding.tvHistory.setOnClickListener(v -> jumpActivity(HistoryActivity.class));
@@ -82,15 +95,42 @@ public class MyFragment extends BaseVbFragment<FragmentMyBinding> {
         });
     }
 
-    private void showPermissionTipPopup(){
+    private void updateUrl() {
+        if (getActivity() == null || getActivity().isDestroyed()) {
+            return;
+        }
+        BaseActivity activity = (BaseActivity) getActivity();
+        activity.showLoadingDialog();
+        DocumentUtil.getTvboxUrl(result -> {
+            if (!TextUtils.isEmpty(result)) {
+                Hawk.put(HawkConfig.API_URL, result);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    activity.dismissLoadingDialog();
+                    Toast.makeText(getActivity(), "配置已成功更新", Toast.LENGTH_LONG).show();
+                    ActivityUtils.finishAllActivities(true);
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                });
+            } else {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    activity.dismissLoadingDialog();
+                    Toast.makeText(getActivity(), "获取" +
+                            getString(Hawk.get(HawkConfig.IS_URL_BACKUP) ? R.string.url_backup : R.string.url_main) +
+                            "失败", Toast.LENGTH_LONG).show();
+                });
+            }
+        });
+    }
+
+
+    private void showPermissionTipPopup() {
         new XPopup.Builder(mActivity)
                 .isDarkTheme(Utils.isDarkTheme())
-                .asConfirm("提示","为了播放视频、音频等,我们需要访问您设备文件的读写权限", () -> {
+                .asConfirm("提示", "为了播放视频、音频等,我们需要访问您设备文件的读写权限", () -> {
                     getPermission();
                 }).show();
     }
 
-    private void getPermission(){
+    private void getPermission() {
         XXPermissions.with(this)
                 .permission(Permission.MANAGE_EXTERNAL_STORAGE)
                 .request(new OnPermissionCallback() {
@@ -98,7 +138,7 @@ public class MyFragment extends BaseVbFragment<FragmentMyBinding> {
                     public void onGranted(List<String> permissions, boolean all) {
                         if (all) {
                             jumpActivity(MovieFoldersActivity.class);
-                        }else {
+                        } else {
                             ToastUtils.showLong("部分权限未正常授予,请授权");
                         }
                     }

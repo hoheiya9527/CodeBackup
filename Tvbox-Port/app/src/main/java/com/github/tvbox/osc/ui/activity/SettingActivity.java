@@ -1,6 +1,5 @@
 package com.github.tvbox.osc.ui.activity;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,12 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.viewpager.widget.ViewPager;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
-import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.base.BaseVbActivity;
 import com.github.tvbox.osc.databinding.ActivitySettingBinding;
@@ -171,9 +167,9 @@ public class SettingActivity extends BaseVbActivity<ActivitySettingBinding> {
 
     @Override
     public void onBackPressed() {
-        if ((homeSourceKey != null && !homeSourceKey.equals(Hawk.get(HawkConfig.HOME_API, "")))||
+        if ((homeSourceKey != null && !homeSourceKey.equals(Hawk.get(HawkConfig.HOME_API, ""))) ||
                 homeRec != Hawk.get(HawkConfig.HOME_REC, 0) ||
-                dnsOpt != Hawk.get(HawkConfig.DOH_URL, 0)|| !currentLiveApi.equals(Hawk.get(HawkConfig.LIVE_URL, ""))) {// 任意项有更改
+                dnsOpt != Hawk.get(HawkConfig.DOH_URL, 0) || !currentLiveApi.equals(Hawk.get(HawkConfig.LIVE_URL, ""))) {// 任意项有更改
             AppManager.getInstance().finishAllActivity();
             if (currentLiveApi.equals(Hawk.get(HawkConfig.LIVE_URL, ""))) {//未更改直播源
                 Bundle bundle = new Bundle();

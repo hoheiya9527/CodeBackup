@@ -26,11 +26,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_margin="20dp"
+        android:layout_weight="1"
         android:background="@drawable/bg_large_round_gray"
-        android:scrollbars="none"
-        >
+        android:scrollbars="none">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,14 +38,61 @@
             android:paddingVertical="20dp">
 
             <LinearLayout
+                android:id="@+id/llUrlSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_about" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:text="切换配置"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/text_gray"
+                    android:textSize="16sp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_url_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:gravity="center"
+                    android:text="@string/url_backup"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/text_gray"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/llSubscription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingVertical="16dp"
-                android:paddingHorizontal="24dp"
                 android:foreground="?android:selectableItemBackground"
-                >
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -86,10 +133,10 @@
                 android:id="@+id/tvHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:foreground="?android:selectableItemBackground">
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -129,10 +176,10 @@
                 android:id="@+id/tvFavorite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:foreground="?android:selectableItemBackground">
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -172,10 +219,10 @@
                 android:id="@+id/tvLive"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:foreground="?android:selectableItemBackground">
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -215,10 +262,10 @@
                 android:id="@+id/tvLocal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:foreground="?android:selectableItemBackground">
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -258,11 +305,10 @@
                 android:id="@+id/addrPlay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingVertical="16dp"
-                android:paddingHorizontal="24dp"
                 android:foreground="?android:selectableItemBackground"
-                >
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -302,10 +348,10 @@
                 android:id="@+id/llAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:foreground="?android:selectableItemBackground">
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -345,10 +391,10 @@
                 android:id="@+id/tvSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:selectableItemBackground"
                 android:orientation="horizontal"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="24dp"
-                android:foreground="?android:selectableItemBackground">
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="28dp"
@@ -390,13 +436,12 @@
 
     <TextView
         android:id="@+id/tv_version"
-        android:textSize="11sp"
-        tools:text="v0.01"
-        android:paddingBottom="6dp"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="6dp"
         android:textColor="@color/gray_darker"
-        />
+        android:textSize="11sp"
+        tools:text="v0.01" />
 </LinearLayout>
 

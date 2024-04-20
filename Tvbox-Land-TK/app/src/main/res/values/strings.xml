@@ -188,6 +188,9 @@
     <string name="sub_delay">Delay</string>
     <string name="sub_style">Style</string>
     <string name="sub_style_text">ABC.</string>
+    <string name="url_main">URL MAIN</string>
+    <string name="url_backup">URL BACKUP</string>
+    <string name="switch_url">切换配置：</string>
 
     <string-array name="doh_name">
         <item>System</item>

@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.util;
 
+import com.orhanobut.hawk.Hawk;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -11,7 +13,7 @@ public class DocumentUtil {
     private static final String URL = "https://hoheiya9527.github.io/";
 
     public static void getTvboxUrl(CallBack callBack) {
-        getUrl("tvbox", callBack);
+        getUrl(Hawk.get(HawkConfig.IS_URL_BACKUP, false) ? "tvbox_backup" : "tvbox", callBack);
     }
 
     public static void getAppUpdateUrl(CallBack callBack) {
@@ -41,6 +43,7 @@ public class DocumentUtil {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    callBack.over("");
                 }
             }
         });

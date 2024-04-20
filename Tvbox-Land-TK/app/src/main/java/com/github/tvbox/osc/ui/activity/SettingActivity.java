@@ -186,6 +186,7 @@ public class SettingActivity extends BaseActivity {
             AppManager.getInstance().finishAllActivity();
             if (currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) & (currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, "")))) {
                 Bundle bundle = new Bundle();
+
                 bundle.putBoolean("useCache", true);
                 jumpActivity(HomeActivity.class, bundle);
             } else {
