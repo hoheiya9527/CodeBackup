@@ -122,10 +122,11 @@ public final class ExoMediaSourceHelper {
             builder.setMimeType(MimeTypes.APPLICATION_M3U8);
             return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
         }
+        //
         switch (contentType) {
-            case C.TYPE_DASH:
+            case C.CONTENT_TYPE_DASH:
                 return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            case C.TYPE_HLS:
+            case C.CONTENT_TYPE_HLS:
                 return new HlsMediaSource.Factory(mHttpDataSourceFactory)
                         .setAllowChunklessPreparation(true)
                         .setExtractorFactory(new MyHlsExtractorFactory())
@@ -141,11 +142,11 @@ public final class ExoMediaSourceHelper {
     private int inferContentType(String fileName) {
         fileName = fileName.toLowerCase();
         if (fileName.contains(".mpd") || fileName.contains("type=mpd")) {
-            return C.TYPE_DASH;
+            return C.CONTENT_TYPE_DASH;
         } else if (fileName.contains("m3u8")) {
-            return C.TYPE_HLS;
+            return C.CONTENT_TYPE_HLS;
         } else {
-            return C.TYPE_OTHER;
+            return C.CONTENT_TYPE_OTHER;
         }
     }
 

@@ -22,6 +22,7 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.util.thunder.Thunder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -820,7 +821,16 @@ public class SourceViewModel extends ViewModel {
 
     private void absXml(AbsXml data, String sourceKey) {
         if (data.movie != null && data.movie.videoList != null) {
+            //-----
+            ArrayList<Movie.Video> removes = new ArrayList<>();
             for (Movie.Video video : data.movie.videoList) {
+                //--------过滤去除推广“饭”------
+                String name = video.name;
+                if (!TextUtils.isEmpty(name) && name.equals(StringUtils.AD_STR)) {
+                    removes.add(video);
+                }
+                //-----------------------------
+
                 if (video.urlBean != null && video.urlBean.infoList != null) {
                     for (Movie.Video.UrlBean.UrlInfo urlInfo : video.urlBean.infoList) {
                         String[] str = null;
@@ -855,6 +865,9 @@ public class SourceViewModel extends ViewModel {
                 if (video.sourceKey == null)
                     video.sourceKey = sourceKey;
             }
+            //
+            //-----
+            data.movie.videoList.removeAll(removes);
         }
     }
 

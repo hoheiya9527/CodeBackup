@@ -63,9 +63,9 @@ public class PlayerHelper {
             playerFactory = AndroidMediaPlayerFactory.create();
         }
         RenderViewFactory renderViewFactory = null;
-        if (playerType==2){
+        if (playerType == 2) {
             renderViewFactory = PlayerViewRenderViewFactory.create(renderType);
-        }else{
+        } else {
             switch (renderType) {
                 case 0:
                 default:
@@ -176,7 +176,7 @@ public class PlayerHelper {
     }
 
     public static String getRootCauseMessage(Throwable th) {
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             if (th.getCause() == null) return th.getLocalizedMessage();
             else th = th.getCause();
         }
