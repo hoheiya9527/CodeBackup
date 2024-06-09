@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 public class StringUtils {
+    public static final String AD_STR = "饭";
 
     public static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;

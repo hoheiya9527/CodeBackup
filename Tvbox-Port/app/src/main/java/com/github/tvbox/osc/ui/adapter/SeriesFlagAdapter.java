@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.bean.VodInfo;
+import com.github.tvbox.osc.util.StringUtils;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,6 @@ public class SeriesFlagAdapter extends BaseQuickAdapter<VodInfo.VodSeriesFlag, B
         } else {
             select.setVisibility(View.GONE);
         }
-        helper.setText(R.id.tvFlag, item.name);
+        helper.setText(R.id.tvFlag, StringUtils.filterStr(item.name));
     }
 }
