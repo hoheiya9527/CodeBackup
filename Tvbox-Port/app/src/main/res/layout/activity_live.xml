@@ -125,7 +125,7 @@
 				android:layout_width="30dp"
 				android:layout_height="30dp"
 				android:src="@drawable/icon_pre"
-				app:tint="@color/text_gray"
+				app:tint="@color/text_foreground"
 				android:rotation="-180"
 				android:padding="4dp"
 				/>
@@ -136,14 +136,14 @@
 				android:text="源 1/1"
 				android:layout_marginHorizontal="14dp"
 				android:textSize="16sp"
-				android:textColor="@color/text_gray"
+				android:textColor="@color/text_foreground"
 				/>
 			<ImageView
 				android:id="@+id/ic_next_source"
 				android:layout_width="30dp"
 				android:layout_height="30dp"
 				android:src="@drawable/icon_pre"
-				app:tint="@color/text_gray"
+				app:tint="@color/text_foreground"
 				android:padding="4dp"
 				/>
 		</LinearLayout>
@@ -153,7 +153,7 @@
 			android:layout_width="34dp"
 			android:layout_height="34dp"
 			android:src="@drawable/ic_cast"
-			app:tint="@color/text_gray"
+			app:tint="@color/text_foreground"
 			android:padding="4dp"
 			android:layout_marginTop="10dp"
 			android:layout_toLeftOf="@+id/ic_setting"
@@ -164,7 +164,7 @@
 			android:layout_width="34dp"
 			android:layout_height="34dp"
 			android:src="@drawable/ic_player_setting"
-			app:tint="@color/text_gray"
+			app:tint="@color/text_foreground"
 			android:padding="4dp"
 			android:layout_alignParentEnd="true"
 			android:layout_marginRight="30dp"
@@ -203,7 +203,7 @@
 				android:paddingHorizontal="10dp"
 				android:scrollbars="none"
 				android:layout_gravity="center"
-				android:layout_marginLeft="10dp"
+				android:layout_marginLeft="40dp"
 				tools:listitem="@layout/item_live_channel_group_new"/>
 
 			<androidx.recyclerview.widget.RecyclerView
@@ -215,7 +215,8 @@
 				android:focusable="true"
 				android:listSelector="@drawable/item_bg_selector_right"
 				android:scrollbars="none"
-				android:layout_marginRight="10dp"
+				android:layout_marginLeft="30dp"
+				android:layout_marginRight="40dp"
 				tools:listitem="@layout/item_live_channel_new"
 				/>
 		</LinearLayout>
