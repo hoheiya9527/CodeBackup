@@ -885,21 +885,20 @@ public class ModelSettingFragment extends BaseLazyFragment {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.show();
         DocumentUtil.getTvboxUrl(result -> {
-            if (!TextUtils.isEmpty(result)) {
-                Hawk.put(HawkConfig.API_URL, result);
-                new Handler(Looper.getMainLooper()).post(() -> {
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (!TextUtils.isEmpty(result)) {
+                    Hawk.put(HawkConfig.API_URL, result);
                     progressDialog.dismiss();
                     tvApi.setText(Hawk.get(HawkConfig.API_URL, ""));
                     Toast.makeText(getActivity(), "配置已成功更新", Toast.LENGTH_LONG).show();
-                });
-            } else {
-                new Handler(Looper.getMainLooper()).post(() -> {
+                    getActivity().onBackPressed();
+                } else {
                     progressDialog.dismiss();
                     Toast.makeText(getActivity(), "获取" +
                             getString(Hawk.get(HawkConfig.IS_URL_BACKUP) ? R.string.url_backup : R.string.url_main) +
                             "失败", Toast.LENGTH_LONG).show();
-                });
-            }
+                }
+            });
         });
     }
 
