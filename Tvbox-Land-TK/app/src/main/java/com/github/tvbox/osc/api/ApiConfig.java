@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
@@ -55,6 +56,7 @@ import java.util.regex.Pattern;
  * @description:
  */
 public class ApiConfig {
+    public static final String TAG_FILTER = "filter";
     private static ApiConfig instance;
     private final LinkedHashMap<String, SourceBean> sourceBeanList;
     private SourceBean mHomeSource;
@@ -589,6 +591,19 @@ public class ApiConfig {
             }
             if (!foundOldSelect && ijkCodes.size() > 0) {
                 ijkCodes.get(0).selected(true);
+            }
+        }
+        /*
+         * 针对FTY的过滤
+         */
+        if (infoJson.has(TAG_FILTER)) {
+            try {
+                JsonArray filters = infoJson.getAsJsonArray(TAG_FILTER);
+                String string = filters.toString();
+                Hawk.put(TAG_FILTER, string);
+                Log.d("test", "==filters:" + string);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

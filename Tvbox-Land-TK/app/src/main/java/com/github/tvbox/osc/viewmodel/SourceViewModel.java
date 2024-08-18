@@ -823,10 +823,19 @@ public class SourceViewModel extends ViewModel {
         if (data.movie != null && data.movie.videoList != null) {
             //-----
             ArrayList<Movie.Video> removes = new ArrayList<>();
+            //
+            String filter = Hawk.get(ApiConfig.TAG_FILTER);
+            List<String> list = null;
+            if (!TextUtils.isEmpty(filter)) {
+                list = new Gson().fromJson(filter, new TypeToken<List<String>>() {
+                }.getType());
+            }
+            //
             for (Movie.Video video : data.movie.videoList) {
-                //--------过滤去除推广“饭”------
+                //--------过滤去除推广 "饭"\"4K"------
                 String name = video.name;
-                if (!TextUtils.isEmpty(name) && name.equals(StringUtils.AD_STR)) {
+                Log.d("test", "== video.name == " + video.name + " >> " + (list != null && list.contains(name)));
+                if (!TextUtils.isEmpty(name) && list != null && list.contains(name)) {
                     removes.add(video);
                 }
                 //-----------------------------
