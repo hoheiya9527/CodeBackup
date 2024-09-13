@@ -22,7 +22,6 @@ import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.SourceBean;
-import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
@@ -34,8 +33,6 @@ import com.github.tvbox.osc.ui.dialog.HomeIconDialog;
 import com.github.tvbox.osc.ui.dialog.ProgressDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.ResetDialog;
-import com.github.tvbox.osc.ui.dialog.XWalkInitDialog;
-import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -562,25 +559,25 @@ public class ModelSettingFragment extends BaseLazyFragment {
         });
         // 3. SYSTEM Configuration -------------------------------------------------------------- //
         // Select Webview ---------------------------------------------
-        findViewById(R.id.llParseWebVew).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                boolean useSystem = !Hawk.get(HawkConfig.PARSE_WEBVIEW, true);
-                Hawk.put(HawkConfig.PARSE_WEBVIEW, useSystem);
-                tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
-                if (!useSystem) {
-                    Toast.makeText(mContext, "注意: XWalkView只适用于部分低Android版本，Android5.0以上推荐使用系统自带", Toast.LENGTH_LONG).show();
-                    XWalkInitDialog dialog = new XWalkInitDialog(mContext);
-                    dialog.setOnListener(new XWalkInitDialog.OnListener() {
-                        @Override
-                        public void onchange() {
-                        }
-                    });
-                    dialog.show();
-                }
-            }
-        });
+//        findViewById(R.id.llParseWebVew).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FastClickCheckUtil.check(v);
+//                boolean useSystem = !Hawk.get(HawkConfig.PARSE_WEBVIEW, true);
+//                Hawk.put(HawkConfig.PARSE_WEBVIEW, useSystem);
+//                tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
+//                if (!useSystem) {
+//                    Toast.makeText(mContext, "注意: XWalkView只适用于部分低Android版本，Android5.0以上推荐使用系统自带", Toast.LENGTH_LONG).show();
+//                    XWalkInitDialog dialog = new XWalkInitDialog(mContext);
+//                    dialog.setOnListener(new XWalkInitDialog.OnListener() {
+//                        @Override
+//                        public void onchange() {
+//                        }
+//                    });
+//                    dialog.show();
+//                }
+//            }
+//        });
         // Select System Render ( Surface/Texture View ) ---------------------
         findViewById(R.id.llRender).setOnClickListener(new View.OnClickListener() {
             @Override

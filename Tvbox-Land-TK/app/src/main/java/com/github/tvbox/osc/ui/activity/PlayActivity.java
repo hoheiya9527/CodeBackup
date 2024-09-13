@@ -29,7 +29,6 @@ import android.webkit.CookieManager;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -88,7 +87,6 @@ import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.util.SubtitleHelper;
 import com.github.tvbox.osc.util.VideoParseRuler;
-import com.github.tvbox.osc.util.XWalkUtils;
 import com.github.tvbox.osc.util.thunder.Jianpian;
 import com.github.tvbox.osc.util.thunder.Thunder;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
@@ -106,15 +104,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xwalk.core.XWalkJavascriptResult;
-import org.xwalk.core.XWalkResourceClient;
-import org.xwalk.core.XWalkSettings;
-import org.xwalk.core.XWalkUIClient;
-import org.xwalk.core.XWalkView;
-import org.xwalk.core.XWalkWebResourceRequest;
-import org.xwalk.core.XWalkWebResourceResponse;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -183,7 +173,7 @@ public class PlayActivity extends BaseActivity {
                         setTip("未嗅探到视频", false, true);
                     }
                 } else if (msg.what == 300) {
-                    setTip((String)msg.obj, false, true);
+                    setTip((String) msg.obj, false, true);
                 }
                 return false;
             }
@@ -404,7 +394,7 @@ public class PlayActivity extends BaseActivity {
     }
 
     void setSubtitleViewTextStyle(int style) {
-        SubtitleHelper.upTextStyle(mController.mSubtitleView,style);
+        SubtitleHelper.upTextStyle(mController.mSubtitleView, style);
     }
 
     void selectMyInternalSubtitle() {
@@ -846,7 +836,7 @@ public class PlayActivity extends BaseActivity {
                             subtitle.content = ss.toString();
                             mController.mSubtitleView.onSubtitleChanged(subtitle);
                         }
-                    }else {
+                    } else {
                         Subtitle subtitle = new Subtitle();
                         subtitle.content = "";
                         mController.mSubtitleView.onSubtitleChanged(subtitle);
@@ -1662,8 +1652,6 @@ public class PlayActivity extends BaseActivity {
     }
 
     // webview
-    private XWalkView mXwalkWebView;
-    private XWalkWebClient mX5WebClient;
     private WebView mSysWebView;
     private SysWebClient mSysWebClient;
     private final Map<String, Boolean> loadedUrls = new HashMap<>();
@@ -1672,31 +1660,9 @@ public class PlayActivity extends BaseActivity {
     private final AtomicInteger loadFoundCount = new AtomicInteger(0);
 
     void loadWebView(String url) {
-        if (mSysWebView == null && mXwalkWebView == null) {
+        if (mSysWebView == null) {
             boolean useSystemWebView = Hawk.get(HawkConfig.PARSE_WEBVIEW, true);
             if (!useSystemWebView) {
-                XWalkUtils.tryUseXWalk(mContext, new XWalkUtils.XWalkState() {
-                    @Override
-                    public void success() {
-                        initWebView(!sourceBean.getClickSelector().isEmpty());
-                        loadUrl(url);
-                    }
-
-                    @Override
-                    public void fail() {
-                        Toast.makeText(mContext, "XWalkView不兼容，已替换为系统自带WebView", Toast.LENGTH_SHORT).show();
-                        initWebView(true);
-                        loadUrl(url);
-                    }
-
-                    @Override
-                    public void ignore() {
-                        Toast.makeText(mContext, "XWalkView运行组件未下载，已替换为系统自带WebView", Toast.LENGTH_SHORT).show();
-                        initWebView(true);
-                        loadUrl(url);
-                    }
-                });
-            } else {
                 initWebView(true);
                 loadUrl(url);
             }
@@ -1706,31 +1672,14 @@ public class PlayActivity extends BaseActivity {
     }
 
     void initWebView(boolean useSystemWebView) {
-        if (useSystemWebView) {
-            mSysWebView = new MyWebView(mContext);
-            configWebViewSys(mSysWebView);
-        } else {
-            mXwalkWebView = new MyXWalkView(mContext);
-            configWebViewX5(mXwalkWebView);
-        }
+        mSysWebView = new MyWebView(mContext);
+        configWebViewSys(mSysWebView);
     }
 
     void loadUrl(String url) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mXwalkWebView != null) {
-                    mXwalkWebView.stopLoading();
-                    if (webUserAgent != null) {
-                        mXwalkWebView.getSettings().setUserAgentString(webUserAgent);
-                    }
-                    //mXwalkWebView.clearCache(true);
-                    if (webHeaderMap != null) {
-                        mXwalkWebView.loadUrl(url, webHeaderMap);
-                    } else {
-                        mXwalkWebView.loadUrl(url);
-                    }
-                }
                 if (mSysWebView != null) {
                     mSysWebView.stopLoading();
                     if (webUserAgent != null) {
@@ -1751,17 +1700,6 @@ public class PlayActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-                if (mXwalkWebView != null) {
-                    mXwalkWebView.stopLoading();
-                    mXwalkWebView.loadUrl("about:blank");
-                    if (destroy) {
-//                        mXwalkWebView.clearCache(true);
-                        mXwalkWebView.removeAllViews();
-                        mXwalkWebView.onDestroy();
-                        mXwalkWebView = null;
-                    }
-                }
                 if (mSysWebView != null) {
                     mSysWebView.stopLoading();
                     mSysWebView.loadUrl("about:blank");
@@ -1810,23 +1748,6 @@ public class PlayActivity extends BaseActivity {
         }
     }
 
-    class MyXWalkView extends XWalkView {
-        public MyXWalkView(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void setOverScrollMode(int mode) {
-            super.setOverScrollMode(mode);
-            if (mContext instanceof Activity)
-                AutoSize.autoConvertDensityOfCustomAdapt((Activity) mContext, PlayActivity.this);
-        }
-
-        @Override
-        public boolean dispatchKeyEvent(KeyEvent event) {
-            return false;
-        }
-    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void configWebViewSys(WebView webView) {
@@ -2008,164 +1929,6 @@ public class PlayActivity extends BaseActivity {
         @Override
         public void onLoadResource(WebView webView, String url) {
             super.onLoadResource(webView, url);
-        }
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    private void configWebViewX5(XWalkView webView) {
-        if (webView == null) {
-            return;
-        }
-        ViewGroup.LayoutParams layoutParams = Hawk.get(HawkConfig.DEBUG_OPEN, false)
-                ? new ViewGroup.LayoutParams(800, 400) :
-                new ViewGroup.LayoutParams(1, 1);
-        webView.setFocusable(false);
-        webView.setFocusableInTouchMode(false);
-        webView.clearFocus();
-        webView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        addContentView(webView, layoutParams);
-        /* 添加webView配置 */
-        final XWalkSettings settings = webView.getSettings();
-        settings.setAllowContentAccess(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setDatabaseEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setJavaScriptEnabled(true);
-
-        settings.setBlockNetworkImage(!Hawk.get(HawkConfig.DEBUG_OPEN, false));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            settings.setMediaPlaybackRequiresUserGesture(false);
-        }
-        settings.setUseWideViewPort(true);
-        settings.setDomStorageEnabled(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
-        settings.setSupportMultipleWindows(false);
-        settings.setLoadWithOverviewMode(true);
-        settings.setBuiltInZoomControls(true);
-        settings.setSupportZoom(false);
-//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        // settings.setUserAgentString(ANDROID_UA);
-
-        webView.setBackgroundColor(Color.BLACK);
-        webView.setUIClient(new XWalkUIClient(webView) {
-            @Override
-            public boolean onConsoleMessage(XWalkView view, String message, int lineNumber, String sourceId, ConsoleMessageType messageType) {
-                return false;
-            }
-
-            @Override
-            public boolean onJsAlert(XWalkView view, String url, String message, XWalkJavascriptResult result) {
-                return true;
-            }
-
-            @Override
-            public boolean onJsConfirm(XWalkView view, String url, String message, XWalkJavascriptResult result) {
-                return true;
-            }
-
-            @Override
-            public boolean onJsPrompt(XWalkView view, String url, String message, String defaultValue, XWalkJavascriptResult result) {
-                return true;
-            }
-        });
-        mX5WebClient = new XWalkWebClient(webView);
-        webView.setResourceClient(mX5WebClient);
-    }
-
-    private class XWalkWebClient extends XWalkResourceClient {
-        public XWalkWebClient(XWalkView view) {
-            super(view);
-        }
-
-        @Override
-        public void onDocumentLoadedInFrame(XWalkView view, long frameId) {
-            super.onDocumentLoadedInFrame(view, frameId);
-        }
-
-        @Override
-        public void onLoadStarted(XWalkView view, String url) {
-            super.onLoadStarted(view, url);
-        }
-
-        @Override
-        public void onLoadFinished(XWalkView view, String url) {
-            super.onLoadFinished(view, url);
-        }
-
-        @Override
-        public void onProgressChanged(XWalkView view, int progressInPercent) {
-            super.onProgressChanged(view, progressInPercent);
-        }
-
-        @Override
-        public XWalkWebResourceResponse shouldInterceptLoadRequest(XWalkView view, XWalkWebResourceRequest request) {
-            String url = request.getUrl().toString();
-            LOG.i("shouldInterceptLoadRequest url:" + url);
-            // suppress favicon requests as we don't display them anywhere
-            if (url.endsWith("/favicon.ico")) {
-                if (url.startsWith("http://127.0.0.1")) {
-                    return createXWalkWebResourceResponse("image/x-icon", "UTF-8", null);
-                }
-                return null;
-            }
-
-            boolean isFilter = VideoParseRuler.isFilter(webUrl, url);
-            if (isFilter) {
-                LOG.i("shouldInterceptLoadRequest filter:" + url);
-                return null;
-            }
-
-            boolean ad;
-            if (!loadedUrls.containsKey(url)) {
-                ad = AdBlocker.isAd(url);
-                loadedUrls.put(url, ad);
-            } else {
-                ad = loadedUrls.get(url);
-            }
-            if (!ad) {
-                if (checkVideoFormat(url)) {
-                    HashMap<String, String> webHeaders = new HashMap<>();
-                    Map<String, String> hds = request.getRequestHeaders();
-                    if (hds != null && hds.keySet().size() > 0) {
-                        for (String k : hds.keySet()) {
-                            if (k.equalsIgnoreCase("user-agent")
-                                    || k.equalsIgnoreCase("referer")
-                                    || k.equalsIgnoreCase("origin")) {
-                                webHeaders.put(k, " " + hds.get(k));
-                            }
-                        }
-                    }
-                    loadFoundVideoUrls.add(url);
-                    loadFoundVideoUrlsHeader.put(url, webHeaders);
-                    LOG.i("loadFoundVideoUrl:" + url);
-                    if (loadFoundCount.incrementAndGet() == 1) {
-                        mHandler.removeMessages(100);
-                        url = loadFoundVideoUrls.poll();
-                        String cookie = CookieManager.getInstance().getCookie(url);
-                        if (!TextUtils.isEmpty(cookie))
-                            webHeaders.put("Cookie", " " + cookie);//携带cookie
-                        playUrl(url, webHeaders);
-                        stopLoadWebView(false);
-                    }
-                }
-            }
-            return ad || loadFoundCount.get() > 0 ?
-                    createXWalkWebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes())) :
-                    null;
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(XWalkView view, String s) {
-            return false;
-        }
-
-        @Override
-        public void onReceivedSslError(XWalkView view, ValueCallback<Boolean> callback, SslError error) {
-            callback.onReceiveValue(true);
         }
     }
 

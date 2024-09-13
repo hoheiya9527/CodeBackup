@@ -223,19 +223,19 @@ public class StringUtils {
         if (TextUtils.isEmpty(str)) {
             return str;
         }
-        String toFind = "公众|神秘的哥哥|WX|微信";
-        String regex = "([^" + toFind + "]+)?";
+        String toFind = "公众号|神秘的哥哥|WX|微信|分享|】";
+        String regex = "((?![" + toFind + "]).)*";
+//        System.out.println("regex==" + regex);
         Pattern compile = Pattern.compile(regex);
         Matcher matcher = compile.matcher(str);
-        if (matcher.find(0)) {
-            String group = matcher.group();
-            if (!TextUtils.isEmpty(group)) {
-                return group;
+        String group = str;
+        while (matcher.find()) {
+            String gr = matcher.group();
+//            System.out.println("==filterStr==group=" + gr);
+            if (!TextUtils.isEmpty(gr)) {
+                group = gr;
             }
-            System.out.println("==filterStr==group=" + group);
-        } else {
-            System.out.println("==filterStr==Not Found");
         }
-        return str;
+        return group;
     }
 }
