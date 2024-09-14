@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Rational;
 import android.view.KeyEvent;
 import android.view.View;
@@ -710,7 +711,7 @@ public class DetailActivity extends BaseActivity {
             e.printStackTrace();
         }
         return arrayList;
-    }  
+    }
 
     private void setTextShow(TextView view, String tag, String info) {
         if (info == null || info.trim().isEmpty()) {
@@ -724,7 +725,9 @@ public class DetailActivity extends BaseActivity {
     private String removeHtmlTag(String info) {
         if (info == null)
             return "";
-        return info.replaceAll("\\<.*?\\>", "").replaceAll("\\s", "");
+        String replaced = info.replaceAll("\\<.*?\\>", "").replaceAll("\\s", "");
+//        Log.d("test", "==replaced==" + replaced);
+        return StringUtils.filterStr(replaced);
     }
 
     private void initViewModel() {

@@ -2,13 +2,15 @@
 buildscript {
     ext.kotlin_version = '1.5.31'
     repositories {
-        gradlePluginPortal()
+//        gradlePluginPortal()
         google()
         mavenCentral()
+        maven { setUrl("https://maven.aliyun.com/repository/public") }
+        maven { setUrl("https://maven.aliyun.com/repository/google") }
         maven { url "https://jitpack.io" }
-        //maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
-        maven { url 'http://home.jundie.top:81/xwalk/maven2' }
-//        maven { url 'http://9xi4o.tk/maven2' }
+        //dlna-cast中cling仓
+        maven { url 'http://4thline.org/m2' }
+
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.2.2"
@@ -21,15 +23,14 @@ buildscript {
 
 allprojects {
     repositories {
-        //dlna-cast中cling仓
-        maven { url 'http://4thline.org/m2' }
-        maven { url "https://jitpack.io" }
-        gradlePluginPortal()
         google()
         mavenCentral()
-        //maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
-//        maven { url 'http://9xi4o.tk/maven2' }
-       maven { url 'http://home.jundie.top:81/xwalk/maven2' }
+        maven { setUrl("https://maven.aliyun.com/repository/public") }
+        maven { setUrl("https://maven.aliyun.com/repository/google") }
+        maven { url "https://jitpack.io" }
+        //dlna-cast中cling仓
+        maven { url 'http://4thline.org/m2' }
+//        gradlePluginPortal()
     }
 }
 

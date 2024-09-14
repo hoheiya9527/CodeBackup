@@ -38,7 +38,7 @@ import me.jessyan.autosize.unit.Subunits;
  * @description:
  */
 public class App extends MultiDexApplication {
-    private static final String URL_DEFAULT = "https://hub.gitmirror.com/https://raw.githubusercontent.com/hoheiya9527/TvboxSelf/main/src.json";
+    private static final String URL_DEFAULT = "https://gh.con.sh/https://raw.githubusercontent.com/hoheiya9527/TvboxSelf/main/src.json";
 
     private static App instance;
 
@@ -80,12 +80,12 @@ public class App extends MultiDexApplication {
         Hawk.init(this).build();
         Hawk.put(HawkConfig.DEBUG_OPEN, false);
 
-        putDefault(HawkConfig.API_URL,URL_DEFAULT);
+        putDefault(HawkConfig.API_URL, URL_DEFAULT);
         putDefault(HawkConfig.HOME_REC, 0);                  //推荐: 0=豆瓣热播, 1=站点推荐
         putDefault(HawkConfig.PLAY_TYPE, 1);                 //播放器: 0=系统, 1=IJK, 2=Exo
         putDefault(HawkConfig.IJK_CODEC, "硬解码");           //IJK解码: 软解码, 硬解码
         putDefault(HawkConfig.PLAY_RENDER, 1);               //默认渲染-Surface
-        putDefault(HawkConfig.BACKGROUND_PLAY_TYPE,2);       //后台播放: 0 关闭,1 开启,2 画中画
+        putDefault(HawkConfig.BACKGROUND_PLAY_TYPE, 2);       //后台播放: 0 关闭,1 开启,2 画中画
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
         putDefault(HawkConfig.DOH_URL, 0);                   //安全DNS: 0=关闭, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=AdGuard, 6=Quad9
         putDefault(HawkConfig.PLAY_SCALE, 0);                //画面缩放: 0=默认, 1=16:9, 2=4:3, 3=填充, 4=原始, 5=裁剪
@@ -95,17 +95,17 @@ public class App extends MultiDexApplication {
 
     private void putDefaultApi() {
         String[] apis = getResources().getStringArray(R.array.api);
-        if(!Hawk.contains(HawkConfig.API_URL) && !Hawk.contains(HawkConfig.SUBSCRIPTIONS) && !TextUtils.isEmpty(apis[0])){
+        if (!Hawk.contains(HawkConfig.API_URL) && !Hawk.contains(HawkConfig.SUBSCRIPTIONS) && !TextUtils.isEmpty(apis[0])) {
             List<Subscription> subscriptions = new ArrayList<>();
             for (int i = 0; i < apis.length; i++) {
-                if (i==0){
+                if (i == 0) {
                     subscriptions.add(new Subscription("订阅: 1", apis[0]).setChecked(true));
-                    Hawk.put(HawkConfig.API_URL,apis[0]);
-                }else {
-                    subscriptions.add(new Subscription("订阅: "+(i+1), apis[i]));
+                    Hawk.put(HawkConfig.API_URL, apis[0]);
+                } else {
+                    subscriptions.add(new Subscription("订阅: " + (i + 1), apis[i]));
                 }
             }
-            Hawk.put(HawkConfig.SUBSCRIPTIONS,subscriptions);
+            Hawk.put(HawkConfig.SUBSCRIPTIONS, subscriptions);
         }
     }
 
@@ -127,10 +127,12 @@ public class App extends MultiDexApplication {
 
 
     private VodInfo vodInfo;
-    public void setVodInfo(VodInfo vodinfo){
+
+    public void setVodInfo(VodInfo vodinfo) {
         this.vodInfo = vodinfo;
     }
-    public VodInfo getVodInfo(){
+
+    public VodInfo getVodInfo() {
         return this.vodInfo;
     }
 
@@ -146,7 +148,7 @@ public class App extends MultiDexApplication {
         }
     }
 
-    private void initCrashConfig(){
+    private void initCrashConfig() {
         //配置全局异常崩溃操作
         CaocConfig.Builder.create()
                 .backgroundMode(CaocConfig.BACKGROUND_MODE_SILENT) //背景模式,开启沉浸式

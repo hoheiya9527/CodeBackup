@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
  */
 public class ApiConfig {
     public static final String TAG_FILTER = "filter";
+    public static final String TAG_REMOVE = "remove_string";
     private static ApiConfig instance;
     private LinkedHashMap<String, SourceBean> sourceBeanList;
     private SourceBean mHomeSource;
@@ -596,14 +597,21 @@ public class ApiConfig {
          */
         if (infoJson.has(TAG_FILTER)) {
             try {
-                JsonArray filters = infoJson.getAsJsonArray(TAG_FILTER);
-                String string = filters.toString();
+                String string = infoJson.getAsJsonPrimitive(TAG_FILTER).getAsString().trim();
                 Hawk.put(TAG_FILTER, string);
-                Log.d("test", "==filters:" + string);
+//                Log.d("test", "==filters:" + string);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        /*
+         * 去除字符显示
+         */
+        String remove = "公众号|神秘的哥哥们|WX|微信|分享";
+        if (infoJson.has(TAG_REMOVE)) {
+            remove = infoJson.getAsJsonPrimitive(TAG_REMOVE).getAsString().trim();
+        }
+        Hawk.put(TAG_REMOVE, remove);
 
     }
 

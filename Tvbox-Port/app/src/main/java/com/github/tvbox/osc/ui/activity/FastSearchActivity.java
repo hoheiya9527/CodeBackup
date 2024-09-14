@@ -3,7 +3,6 @@ package com.github.tvbox.osc.ui.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -11,18 +10,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.angcyo.tablayout.DslTabLayout;
-import com.angcyo.tablayout.DslTabLayoutConfig;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.LogUtils;
@@ -31,17 +24,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.catvod.crawler.JsLoader;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
-import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseVbActivity;
 import com.github.tvbox.osc.bean.AbsXml;
 import com.github.tvbox.osc.bean.Movie;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.TmdbVodInfo;
-import com.github.tvbox.osc.constant.CacheConst;
 import com.github.tvbox.osc.databinding.ActivityFastSearchBinding;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
-import com.github.tvbox.osc.ui.adapter.FastListAdapter;
 import com.github.tvbox.osc.ui.adapter.FastSearchAdapter;
 import com.github.tvbox.osc.ui.adapter.SearchWordAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchCheckboxDialog;
@@ -59,44 +49,33 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
-import com.lxj.xpopup.enums.PopupAnimation;
 import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.lxj.xpopup.interfaces.SimpleCallback;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
-import com.owen.tvrecyclerview.widget.TvRecyclerView;
-import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
-import com.zhy.view.flowlayout.TagFlowLayout;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import SevenZip.Compression.LZMA.Base;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.jvm.functions.Function4;
-
 /**
  * @author pj567
  * @date :2020/12/23
  * @description:
  */
-public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding> implements TextWatcher{
+public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding> implements TextWatcher {
 
     SourceViewModel sourceViewModel;
     private FastSearchAdapter searchAdapter;
@@ -187,7 +166,8 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
                         if (searchExecutorService != null) {
                             pauseRunnable = searchExecutorService.shutdownNow();
                             searchExecutorService = null;
-                            JsLoader.stopAll();                        }
+                            JsLoader.stopAll();
+                        }
                     } catch (Throwable th) {
                         th.printStackTrace();
                     }
@@ -228,21 +208,21 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
 
         searchAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             Movie.Video video = searchAdapter.getData().get(position);
-            if (!TextUtils.isEmpty(video.name)){
+            if (!TextUtils.isEmpty(video.name)) {
                 queryFromTMDB(video.name);
             }
             return true;
         });
         searchAdapterFilter.setOnItemLongClickListener((adapter, view, position) -> {
             Movie.Video video = searchAdapterFilter.getData().get(position);
-            if (!TextUtils.isEmpty(video.name)){
+            if (!TextUtils.isEmpty(video.name)) {
                 queryFromTMDB(video.name);
             }
             return true;
         });
 
         mSearchWordAdapter = new SearchWordAdapter();
-        mBinding.rvFenci.addItemDecoration(new LinearSpacingItemDecoration(20,true));
+        mBinding.rvFenci.addItemDecoration(new LinearSpacingItemDecoration(20, true));
         mBinding.rvFenci.setAdapter(mSearchWordAdapter);
         mSearchWordAdapter.setOnItemClickListener((adapter, view, position) -> {
             search(mSearchWordAdapter.getData().get(position));
@@ -258,11 +238,11 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
     /**
      * 指定搜索源(过滤)
      */
-    private void filterSearchSource(){
+    private void filterSearchSource() {
         if (mSearchCheckboxDialog == null) {
             List<SourceBean> allSourceBean = ApiConfig.get().getSourceBeanList();
             List<SourceBean> searchAbleSource = new ArrayList<>();
-            for(SourceBean sourceBean : allSourceBean) {
+            for (SourceBean sourceBean : allSourceBean) {
                 if (sourceBean.isSearchable()) {
                     searchAbleSource.add(sourceBean);
                 }
@@ -278,7 +258,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         mSearchCheckboxDialog.show();
     }
 
-    public static void setCheckedSourcesForSearch(HashMap<String,String> checkedSources) {
+    public static void setCheckedSourcesForSearch(HashMap<String, String> checkedSources) {
         mCheckSources = checkedSources;
     }
 
@@ -341,7 +321,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("title")) {
             String title = intent.getStringExtra("title");
-            if (!TextUtils.isEmpty(title)){
+            if (!TextUtils.isEmpty(title)) {
                 showLoading();
                 search(title);
             }
@@ -349,26 +329,24 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
     }
 
 
-    private void hideHotAndHistorySearch(boolean isHide){
-        if(isHide){
+    private void hideHotAndHistorySearch(boolean isHide) {
+        if (isHide) {
             mBinding.llSearchSuggest.setVisibility(View.GONE);
             mBinding.llSearchResult.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mBinding.llSearchSuggest.setVisibility(View.VISIBLE);
             mBinding.llSearchResult.setVisibility(View.GONE);
         }
     }
 
-    private void initHistorySearch(){
+    private void initHistorySearch() {
 
         List<String> mSearchHistory = Hawk.get(HawkConfig.HISTORY_SEARCH, new ArrayList<>());
 
         mBinding.llHistory.setVisibility(mSearchHistory.size() > 0 ? View.VISIBLE : View.GONE);
-        mBinding.flHistory.setAdapter(new TagAdapter<String>(mSearchHistory)
-        {
+        mBinding.flHistory.setAdapter(new TagAdapter<String>(mSearchHistory) {
             @Override
-            public View getView(FlowLayout parent, int position, String s)
-            {
+            public View getView(FlowLayout parent, int position, String s) {
                 TextView tv = (TextView) LayoutInflater.from(FastSearchActivity.this).inflate(R.layout.item_search_word_hot,
                         mBinding.flHistory, false);
                 tv.setText(s);
@@ -384,14 +362,14 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         findViewById(R.id.iv_clear_history).setOnClickListener(view -> {
             Hawk.put(HawkConfig.HISTORY_SEARCH, new ArrayList<>());
             //FlowLayout及其adapter貌似没有清空数据的api,简单粗暴重置
-            view.postDelayed(this::initHistorySearch,300);
+            view.postDelayed(this::initHistorySearch, 300);
         });
     }
 
     /**
      * 热门搜索
      */
-    private void getHotWords(){
+    private void getHotWords() {
         // 加载热词
         OkGo.<String>get("https://node.video.qq.com/x/api/hot_search")
 //        OkGo.<String>get("https://api.web.360kan.com/v1/rank")
@@ -409,11 +387,9 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
                                 JsonObject obj = (JsonObject) ele;
                                 hots.add(obj.get("title").getAsString().trim().replaceAll("<|>|《|》|-", "").split(" ")[0]);
                             }
-                            mBinding.flHot.setAdapter(new TagAdapter<String>(hots)
-                            {
+                            mBinding.flHot.setAdapter(new TagAdapter<String>(hots) {
                                 @Override
-                                public View getView(FlowLayout parent, int position, String s)
-                                {
+                                public View getView(FlowLayout parent, int position, String s) {
                                     TextView tv = (TextView) LayoutInflater.from(FastSearchActivity.this).inflate(R.layout.item_search_word_hot,
                                             mBinding.flHot, false);
                                     tv.setText(s);
@@ -442,7 +418,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
     /**
      * 联想搜索
      */
-    private void getSuggest(String text){
+    private void getSuggest(String text) {
         // 加载热词
         OkGo.<String>get("https://suggest.video.iqiyi.com/?if=mobile&key=" + text)
                 .execute(new AbsCallback<String>() {
@@ -453,13 +429,13 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
                             JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
                             JsonArray datas = json.get("data").getAsJsonArray();
                             for (JsonElement data : datas) {
-                                JsonObject item = (JsonObject)data;
+                                JsonObject item = (JsonObject) data;
                                 titles.add(item.get("name").getAsString().trim());
                             }
                         } catch (Throwable th) {
                             LogUtils.d(th.toString());
                         }
-                        if (!titles.isEmpty()){
+                        if (!titles.isEmpty()) {
                             showSuggestDialog(titles);
                         }
                     }
@@ -472,12 +448,12 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
 
     }
 
-    private void showSuggestDialog(List<String> list){
-        if (mSearchSuggestionsDialog==null){
+    private void showSuggestDialog(List<String> list) {
+        if (mSearchSuggestionsDialog == null) {
             mSearchSuggestionsDialog = new SearchSuggestionsDialog(FastSearchActivity.this, list, new OnSelectListener() {
                 @Override
                 public void onSelect(int position, String text) {
-                    LogUtils.d("搜索:"+text);
+                    LogUtils.d("搜索:" + text);
                     mSearchSuggestionsDialog.dismissWith(() -> search(text));
                 }
             });
@@ -496,21 +472,21 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
                     })
                     .asCustom(mSearchSuggestionsDialog)
                     .show();
-        }else {// 不为空说明弹窗为打开状态(关闭就置空了).直接刷新数据
+        } else {// 不为空说明弹窗为打开状态(关闭就置空了).直接刷新数据
             mSearchSuggestionsDialog.updateSuggestions(list);
         }
     }
 
-    private void saveSearchHistory(String searchWord){
+    private void saveSearchHistory(String searchWord) {
         if (!searchWord.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.HISTORY_SEARCH, new ArrayList<>());
-            if (!history.contains(searchWord)){
+            if (!history.contains(searchWord)) {
                 history.add(0, searchWord);
-            }else {
+            } else {
                 history.remove(searchWord);
                 history.add(0, searchWord);
             }
-            if (history.size() > 30){
+            if (history.size() > 30) {
                 history.remove(30);
             }
             Hawk.put(HawkConfig.HISTORY_SEARCH, history);
@@ -553,7 +529,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         mBinding.etSearch.setSelection(title.length());
         mBinding.etSearch.addTextChangedListener(this);
 
-        if (mSearchSuggestionsDialog!=null && mSearchSuggestionsDialog.isShow()){
+        if (mSearchSuggestionsDialog != null && mSearchSuggestionsDialog.isShow()) {
             mSearchSuggestionsDialog.dismiss();
         }
 
@@ -583,7 +559,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
     private ExecutorService searchExecutorService = null;
     private AtomicInteger allRunCount = new AtomicInteger(0);
 
-    private TextView getSiteTextView(String text){
+    private TextView getSiteTextView(String text) {
         TextView textView = new TextView(this);
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
@@ -594,6 +570,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         textView.setLayoutParams(params);
         return textView;
     }
+
     private void searchResult() {
         try {
             if (searchExecutorService != null) {
@@ -619,7 +596,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         ArrayList<String> siteKey = new ArrayList<>();
 
         mBinding.tabLayout.addView(getSiteTextView("全部显示"));
-        mBinding.tabLayout.setCurrentItem(0, true,false);
+        mBinding.tabLayout.setCurrentItem(0, true, false);
         for (SourceBean bean : searchRequestList) {
             if (!bean.isSearchable()) {
                 continue;
@@ -648,6 +625,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
 
     /**
      * 添加到最后面并返回最后一个key
+     *
      * @param key
      * @return
      */
@@ -662,7 +640,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
             if (Objects.equals(name, "")) return key;
 
             for (int i = 0; i < mBinding.tabLayout.getChildCount(); ++i) {
-                TextView item = (TextView)mBinding.tabLayout.getChildAt(i);
+                TextView item = (TextView) mBinding.tabLayout.getChildAt(i);
                 if (Objects.equals(name, item.getText().toString())) {
                     return key;
                 }
@@ -680,7 +658,7 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
         searchTitle = searchTitle.trim();
         String[] arr = searchTitle.split("\\s+");
         int matchNum = 0;
-        for(String one : arr) {
+        for (String one : arr) {
             if (name.contains(one)) matchNum++;
         }
         return matchNum == arr.length ? true : false;
@@ -755,27 +733,28 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
     @Override
     public void afterTextChanged(Editable editable) {
         String text = editable.toString();
-        if (TextUtils.isEmpty(text) && mSearchSuggestionsDialog!=null){
+        if (TextUtils.isEmpty(text) && mSearchSuggestionsDialog != null) {
             mSearchSuggestionsDialog.dismiss();
-        }else {
+        } else {
             getSuggest(text);
         }
     }
 
     /**
      * 查询影片在TMDB的信息
+     *
      * @param vodName
      */
-    private void queryFromTMDB(String vodName){
+    private void queryFromTMDB(String vodName) {
         OkGo.getInstance().cancelTag("queryFromTMDB");
 
         String token = Hawk.get(HawkConfig.TOKEN_TMDB, "");
-        if (TextUtils.isEmpty(token)){
+        if (TextUtils.isEmpty(token)) {
             return;
         }
         showLoadingDialog();
-        OkGo.<String>get("https://api.themoviedb.org/3/search/movie?query="+vodName+"&include_adult=false&language=zh-ZH&page=1")
-                .headers("Authorization","Bearer "+token)
+        OkGo.<String>get("https://api.themoviedb.org/3/search/movie?query=" + vodName + "&include_adult=false&language=zh-ZH&page=1")
+                .headers("Authorization", "Bearer " + token)
                 .tag("queryFromTMDB")
                 .execute(new AbsCallback<String>() {
                     @Override
@@ -793,11 +772,11 @@ public class FastSearchActivity extends BaseVbActivity<ActivityFastSearchBinding
                         String json = response.body();
                         TmdbVodInfo tmdbVodInfo = GsonUtils.fromJson(json, TmdbVodInfo.class);
                         List<TmdbVodInfo.ResultsDTO> results = tmdbVodInfo.getResults();
-                        if (results!=null && !results.isEmpty()){
+                        if (results != null && !results.isEmpty()) {
                             new XPopup.Builder(FastSearchActivity.this)
-                                    .asCustom(new TmdbVodInfoDialog(FastSearchActivity.this,results.get(0)))
+                                    .asCustom(new TmdbVodInfoDialog(FastSearchActivity.this, results.get(0)))
                                     .show();
-                        }else {
+                        } else {
                             ToastUtils.showShort("未查询到相关信息");
                         }
                     }

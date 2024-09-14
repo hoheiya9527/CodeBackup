@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -765,8 +766,8 @@ public class SourceViewModel extends ViewModel {
             String filter = Hawk.get(ApiConfig.TAG_FILTER);
             List<String> list = null;
             if (!TextUtils.isEmpty(filter)) {
-                list = new Gson().fromJson(filter, new TypeToken<List<String>>() {
-                }.getType());
+                String[] split = filter.split("\\|");
+                list = Arrays.asList(split);
             }
             //
             for (Movie.Video video : data.movie.videoList) {

@@ -1,17 +1,8 @@
 package com.github.tvbox.osc.base;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 
 import androidx.viewbinding.ViewBinding;
-
-import com.github.tvbox.osc.api.ApiConfig;
-import com.github.tvbox.osc.event.RefreshEvent;
-import com.github.tvbox.osc.ui.activity.DetailActivity;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,7 +34,7 @@ public abstract class BaseVbActivity<T extends ViewBinding> extends BaseActivity
             Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class);
             mBinding = (T) inflate.invoke(null, getLayoutInflater());
             setContentView(mBinding.getRoot());
-        } catch (NoSuchMethodException | IllegalAccessException| InvocationTargetException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }

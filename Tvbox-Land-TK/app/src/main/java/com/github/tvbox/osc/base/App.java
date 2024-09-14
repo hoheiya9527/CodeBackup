@@ -39,7 +39,7 @@ import me.jessyan.autosize.unit.Subunits;
  * @description:
  */
 public class App extends MultiDexApplication {
-    private static final String URL_DEFAULT = "https://hub.gitmirror.com/https://raw.githubusercontent.com/hoheiya9527/TvboxSelf/main/src.json";
+    private static final String URL_DEFAULT = "https://gh.con.sh/https://raw.githubusercontent.com/hoheiya9527/TvboxSelf/main/src.json";
     private static App instance;
     private static P2PClass p;
     public static String burl;

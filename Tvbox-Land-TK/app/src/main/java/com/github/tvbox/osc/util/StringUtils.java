@@ -3,6 +3,9 @@ package com.github.tvbox.osc.util;
 
 import android.text.TextUtils;
 
+import com.github.tvbox.osc.api.ApiConfig;
+import com.orhanobut.hawk.Hawk;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
@@ -223,19 +226,25 @@ public class StringUtils {
         if (TextUtils.isEmpty(str)) {
             return str;
         }
-        String toFind = "公众号|神秘的哥哥|WX|微信|分享|】";
-        String regex = "((?![" + toFind + "]).)*";
-//        System.out.println("regex==" + regex);
-        Pattern compile = Pattern.compile(regex);
-        Matcher matcher = compile.matcher(str);
-        String group = str;
-        while (matcher.find()) {
-            String gr = matcher.group();
-//            System.out.println("==filterStr==group=" + gr);
-            if (!TextUtils.isEmpty(gr)) {
-                group = gr;
+        try {
+            String toRemove = Hawk.get(ApiConfig.TAG_REMOVE);
+            // 定义完整的分隔符
+            String[] delimiters = toRemove.split("\\|");
+            String result = str;
+            // 遍历所有分隔符并逐个匹配
+            for (String delimiter : delimiters) {
+                String regex = Pattern.quote(delimiter) + "(.*)";
+//            System.out.println("regex==" + regex);
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(result);
+                if (matcher.find()) {
+                    result = matcher.group(1).trim();  // 提取分隔符后的内容
+//                    System.out.println("==filterStr==group=" + result);
+                }
             }
+            return result;
+        } catch (Exception ignore) {
+            return str;
         }
-        return group;
     }
 }
