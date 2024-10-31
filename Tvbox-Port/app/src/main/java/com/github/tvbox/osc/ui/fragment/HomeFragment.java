@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import com.github.tvbox.osc.ui.dialog.TipDialog;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -88,7 +90,6 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
         setLoadSir(mBinding.contentLayout);
 
         initViewModel();
-
         initData();
         //首次运行进行配置地址更新
         DocumentUtil.getTvboxUrl(
@@ -97,7 +98,7 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                         return;
                     }
                     String url = Hawk.get(HawkConfig.API_URL, "");
-                    if (!url.equals(result)){
+                    if (!url.equals(result)) {
                         Hawk.put(HawkConfig.API_URL, result);
                         ToastUtils.showLong("配置地址已重新配置，请重启应用以生效使用");
                     }
@@ -278,7 +279,10 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
             mBinding.tabLayout.removeAllViews();
             fragments.clear();
             for (MovieSort.SortData data : mSortDataList) {
-                mBinding.tabLayout.addView(getTabTextView(data.name));
+                //
+//                Log.d("test", "==initViewPager data.name==" + data.name);
+                //
+                mBinding.tabLayout.addView(getTabTextView(StringUtils.filterStr(data.name)));
 
                 if (data.id.equals("my0")) {//tab是主页,添加主页fragment 根据设置项显示豆瓣热门/站点推荐(每个源不一样)/历史记录
                     if (Hawk.get(HawkConfig.HOME_REC, 0) == 1 && absXml != null && absXml.videoList != null && absXml.videoList.size() > 0) {//站点推荐
