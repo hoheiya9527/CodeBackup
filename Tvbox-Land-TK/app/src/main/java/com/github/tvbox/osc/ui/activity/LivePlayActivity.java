@@ -743,7 +743,6 @@ public class LivePlayActivity extends BaseActivity {
                 });
             }
         } else {
-
             Epginfo epgbcinfo = new Epginfo(date, "暂无节目信息", date, "00:00", "23:59", 0);
             arrayList.add(epgbcinfo);
             epgdata = arrayList;

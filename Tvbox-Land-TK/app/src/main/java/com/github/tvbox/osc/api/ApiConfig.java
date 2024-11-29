@@ -468,10 +468,9 @@ public class ApiConfig {
                                 System.out.println("Live URL :" + url);
                                 putLiveHistory(url);
                                 // Overwrite with Live URL from Settings
-                                if (StringUtils.isBlank(liveURL)) {
-                                    Hawk.put(HawkConfig.LIVE_URL, url);
-                                }
-
+//                                if (StringUtils.isBlank(liveURL)) {
+                                Hawk.put(HawkConfig.LIVE_URL, url);
+//                                }
                                 // Final Live URL
                                 liveURL_final = url;
 
