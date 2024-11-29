@@ -792,8 +792,8 @@ public class LivePlayActivity extends BaseActivity {
                                 tv_next_time.setText(((Epginfo) arrayList.get(size + 1)).start + " - " + ((Epginfo) arrayList.get(size + 1)).end);
                                 tv_next_name.setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
-                                tv_next_time.setText("00:00 - 23:59");
-                                tv_next_name.setText("No Information");
+                                tv_next_time.setText("");
+                                tv_next_name.setText("");
                             }
                             break;
                         } else {
