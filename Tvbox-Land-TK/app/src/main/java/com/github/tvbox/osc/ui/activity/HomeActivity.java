@@ -62,6 +62,7 @@ import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.RestartAppUtil;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -110,6 +111,7 @@ public class HomeActivity extends BaseActivity {
     public View sortFocusView = null;
     private final Handler mHandler = new Handler();
     private long mExitTime = 0;
+    private boolean isRestart = false;
     private final Runnable mRunnable = new Runnable() {
         @SuppressLint({"DefaultLocale", "SetTextI18n"})
         @Override
@@ -152,7 +154,11 @@ public class HomeActivity extends BaseActivity {
             String url = Hawk.get(HawkConfig.API_URL, "");
             if (!url.equals(result)) {
                 Hawk.put(HawkConfig.API_URL, result);
-                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(HomeActivity.this, "配置已成功更新，请重启应用以生效使用", Toast.LENGTH_LONG).show());
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    isRestart = true;
+                    Toast.makeText(HomeActivity.this, "配置已成功更新，正在重启应用", Toast.LENGTH_LONG).show();
+                    RestartAppUtil.restartApp(HomeActivity.this);
+                });
             }
         });
     }
@@ -783,7 +789,9 @@ public class HomeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        AppManager.getInstance().appExit(0);
+        if (!isRestart) {
+            AppManager.getInstance().appExit(0);
+        }
         ControlManager.get().stopServer();
     }
 

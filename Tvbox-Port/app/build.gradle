@@ -173,4 +173,7 @@ dependencies {
     implementation project(":crash")
     //dlna投屏
     implementation 'com.github.devin1014.DLNA-Cast:dlna-dmc:V1.0.0'
+
+    //
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 }

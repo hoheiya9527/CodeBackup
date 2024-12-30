@@ -172,6 +172,7 @@ public class LivePlayActivity extends BaseActivity {
 
     private boolean isSHIYI = false;
     private static String shiyi_time;//时移时间
+    private View lineView;
 
     private HashMap<String, String> setPlayHeaders(String url) {
         HashMap<String, String> header = new HashMap();
@@ -253,6 +254,7 @@ public class LivePlayActivity extends BaseActivity {
         tv_channelname = findViewById(R.id.tv_channel_name);  //底部名称
         tv_channelnum = findViewById(R.id.tv_channel_number); //底部数字
         tv_logo = findViewById(R.id.tv_logo);
+        lineView = findViewById(R.id.redLine);
         tv_curr_time = findViewById(R.id.tv_current_program_time);
         tv_curr_name = findViewById(R.id.tv_current_program_name);
         tv_next_time = findViewById(R.id.tv_next_program_time);
@@ -780,7 +782,14 @@ public class LivePlayActivity extends BaseActivity {
                 String[] epgInfo = EpgUtil.getEpgInfo(channel_Name.getChannelName());
                 getTvLogo(channel_Name.getChannelName(), epgInfo == null ? null : epgInfo[0]);
                 ArrayList arrayList = (ArrayList) hsEpg.get(savedEpgKey);
-                if (arrayList != null && arrayList.size() > 0) {
+                if (arrayList == null || arrayList.isEmpty()) {
+                    lineView.setVisibility(View.INVISIBLE);
+                    tv_curr_time.setText("");
+                    tv_curr_name.setText("");
+                    tv_next_time.setText("");
+                    tv_next_name.setText("");
+                } else {
+                    lineView.setVisibility(View.VISIBLE);
                     Date date = new Date();
                     int size = arrayList.size() - 1;
                     while (size >= 0) {

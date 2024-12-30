@@ -43,6 +43,7 @@ import com.github.tvbox.osc.ui.dialog.TipDialog;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.RestartAppUtil;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
@@ -100,7 +101,8 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
                     String url = Hawk.get(HawkConfig.API_URL, "");
                     if (!url.equals(result)) {
                         Hawk.put(HawkConfig.API_URL, result);
-                        ToastUtils.showLong("配置地址已重新配置，请重启应用以生效使用");
+                        ToastUtils.showLong("配置更新成功，正在重启应用");
+                        RestartAppUtil.restartApp(getActivity());
                     }
                 });
         //

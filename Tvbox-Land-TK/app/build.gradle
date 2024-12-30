@@ -172,4 +172,6 @@ dependencies {
             exclude group: 'xpp3', module: 'xpp3'
         }
     }
+    //
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 }
