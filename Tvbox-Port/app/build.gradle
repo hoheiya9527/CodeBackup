@@ -12,6 +12,7 @@ android {
         versionCode 2
         versionName '1.0.6.' + new Date().format("yyMMdd")
         multiDexEnabled true
+
         //设置room的Schema的位置
         javaCompileOptions {
             annotationProcessorOptions {

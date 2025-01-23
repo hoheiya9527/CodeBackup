@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.util;
 
+import com.github.tvbox.osc.bean.API;
 import com.orhanobut.hawk.Hawk;
 
 import org.jsoup.Jsoup;
@@ -13,7 +14,8 @@ public class DocumentUtil {
     private static final String URL = "https://hoheiya9527.github.io/";
 
     public static void getTvboxUrl(CallBack callBack) {
-        getUrl(Hawk.get(HawkConfig.IS_URL_BACKUP, false) ? "tvbox_backup" : "tvbox", callBack);
+        Integer type = Hawk.get(HawkConfig.API_TYPE, 0);
+        getUrl(API.get(type).getTag(), callBack);
     }
 
     public static void getAppUpdateUrl(CallBack callBack) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.github.tvbox.osc">
     <!-- 在 Android 11 中，应用程序需要声明它们要使用的其他应用程序的包名 -->
     <queries>
@@ -77,8 +78,8 @@
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".ui.activity.FastSearchActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.activity.SettingActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
@@ -91,13 +92,15 @@
 
         <service android:name="com.android.cast.dlna.dmc.DLNACastService" />
 
-        <receiver android:name=".receiver.SearchReceiver"
+        <receiver
+            android:name=".receiver.SearchReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.movie.search.Action" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.CustomWebReceiver"
+        <receiver
+            android:name=".receiver.CustomWebReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.movie.custom.web.Action" />

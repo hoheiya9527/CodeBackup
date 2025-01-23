@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.util;
 
+import com.github.tvbox.osc.bean.API;
 import com.orhanobut.hawk.Hawk;
 
 import org.jsoup.Jsoup;
@@ -13,7 +14,7 @@ public class DocumentUtil {
     private static final String URL = "https://hoheiya9527.github.io/";
 
     public static void getTvboxUrl(CallBack callBack) {
-        getUrl(Hawk.get(HawkConfig.IS_URL_BACKUP, false) ? "tvbox_backup" : "tvbox", callBack);
+        getUrl(API.get(Hawk.get(HawkConfig.API_TYPE, 0)).getTag(), callBack);
     }
 
     public static void getAppUpdateUrl(CallBack callBack) {
@@ -25,15 +26,10 @@ public class DocumentUtil {
             @Override
             public void run() {
                 try {
-                    Document document = Jsoup
-                            .connect(URL)
-                            .timeout(10 * 1000)
-                            .header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:49.0) Gecko/20100101 Firefox/49.0")
-                            .header("Connection", "close")
-                            .get();
+                    Document document = Jsoup.connect(URL).timeout(10 * 1000).header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:49.0) Gecko/20100101 Firefox/49.0").header("Connection", "close").get();
 //                  System.out.println(document);
                     Elements elements = document.select("div#" + tag);
-                    if (elements.size() == 0) {
+                    if (elements.isEmpty()) {
                         System.out.println(tag + " url is Empty");
                         callBack.over("");
                     } else {

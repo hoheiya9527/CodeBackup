@@ -20,6 +20,7 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
+import com.github.tvbox.osc.bean.API;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
@@ -155,7 +156,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         //
         urlSwitchLL = findViewById(R.id.ll_url_switch);
         urlSwitchLL.setOnClickListener(view -> {
-            Hawk.put(HawkConfig.IS_URL_BACKUP, !Hawk.get(HawkConfig.IS_URL_BACKUP, false));
+            int type = Hawk.get(HawkConfig.API_TYPE, 0) + 1;
+            Hawk.put(HawkConfig.API_TYPE, API.get(type).getType());
             showUrlSwitch();
             updateUrl();
         });
@@ -891,17 +893,17 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     getActivity().onBackPressed();
                 } else {
                     progressDialog.dismiss();
-                    Toast.makeText(getActivity(), "获取" +
-                            getString(Hawk.get(HawkConfig.IS_URL_BACKUP) ? R.string.url_backup : R.string.url_main) +
-                            "失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "获取"
+                            + API.get(Hawk.get(HawkConfig.API_TYPE, 0)).getLabel()
+                            + "失败", Toast.LENGTH_LONG).show();
                 }
             });
         });
     }
 
     private void showUrlSwitch() {
-        urlSwitchTv.setText(Hawk.get(HawkConfig.IS_URL_BACKUP, false) ?
-                getString(R.string.url_backup) : getString(R.string.url_main));
+        API api = API.get(Hawk.get(HawkConfig.API_TYPE, 0));
+        urlSwitchTv.setText(api.getLabel());
     }
 
     @Override
