@@ -758,7 +758,7 @@ public class LivePlayActivity extends BaseActivity {
         @Override
         public void run() {
             Date date = new Date();
-            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm",Locale.getDefault());
             tv_sys_time.setText(timeFormat.format(date));
             mHandler.postDelayed(this, 1000);
 
@@ -801,6 +801,14 @@ public class LivePlayActivity extends BaseActivity {
                                 tv_next_time.setText(((Epginfo) arrayList.get(size + 1)).start + " - " + ((Epginfo) arrayList.get(size + 1)).end);
                                 tv_next_name.setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
+                                tv_next_time.setText("");
+                                tv_next_name.setText("");
+                            }
+                            //无效EPG信息不作显示
+                            if (tv_curr_name.getText().toString().contains("暂未提供")) {
+                                //
+                                tv_curr_time.setText("");
+                                tv_curr_name.setText("");
                                 tv_next_time.setText("");
                                 tv_next_name.setText("");
                             }

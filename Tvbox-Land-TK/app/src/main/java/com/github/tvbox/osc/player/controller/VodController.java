@@ -316,7 +316,7 @@ public class VodController extends BaseController {
         @Override
         public void run() {
             Date date = new Date();
-            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm",Locale.getDefault());
             mPlayPauseTime.setText(timeFormat.format(date));
             mTime.setText(timeFormat.format(date));
             mHandler.postDelayed(this, 1000);
@@ -1128,7 +1128,7 @@ public class VodController extends BaseController {
         Calendar date = Calendar.getInstance();
         long t = date.getTimeInMillis();
         Date afterAdd = new Date(t + TimeRemaining);
-        SimpleDateFormat timeEnd = new SimpleDateFormat("hh:mm aa", Locale.ENGLISH);
+        SimpleDateFormat timeEnd = new SimpleDateFormat("HH:mm",Locale.getDefault());
         if (isPaused) {
             mTimeEnd.setText(getContext().getString(R.string.vod_remaining_time) + " " + PlayerUtils.stringForTime((int) TimeRemaining) + " | " + getContext().getString(R.string.vod_ends_at) + " " + timeEnd.format(afterAdd));
         } else {

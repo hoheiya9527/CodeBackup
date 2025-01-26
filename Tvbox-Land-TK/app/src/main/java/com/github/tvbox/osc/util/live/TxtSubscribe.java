@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.util.live;
 
+import android.text.TextUtils;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -8,6 +10,7 @@ import java.io.StringReader;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +18,8 @@ public class TxtSubscribe {
 
     private static final Pattern NAME_PATTERN = Pattern.compile(".*,(.+?)$");
     private static final Pattern GROUP_PATTERN = Pattern.compile("group-title=\"(.*?)\"");
+
+    private static final Pattern TVG_NAME_PATTERN = Pattern.compile("tvg-name=\"(.*?)\""); // 取频道名称
 
     public static void parse(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap, String str) {
         if (str.startsWith("#EXTM3U")) {
@@ -27,14 +32,21 @@ public class TxtSubscribe {
     private static void parseM3u(LinkedHashMap<String, LinkedHashMap<String, ArrayList<String>>> linkedHashMap, String str) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new StringReader(str));
-            LinkedHashMap<String, ArrayList<String>> channelTemp;//频道名>>源
-            ArrayList<String> urls = null;//源
+            LinkedHashMap<String, ArrayList<String>> channelTemp; // 频道名 >> 源
+            ArrayList<String> urls = null; // 源
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.isEmpty()) continue;
                 if (line.startsWith("#EXTM3U")) continue;
                 if (line.startsWith("#EXTINF")) {
-                    String name = getStrByRegex(NAME_PATTERN, line);
+                    // 优先匹配 tvg-name，如果不存在则用原来的 NAME_PATTERN
+                    String name = getStrByRegex(TVG_NAME_PATTERN, line);
+                    if (name == null || name.isEmpty()) {
+                        name = getStrByRegex(NAME_PATTERN, line); // 如果没有找到 tvg-name，回退到原始规则
+                    }
+                    if (!TextUtils.isEmpty(name)) {
+                        name = name.toUpperCase(Locale.ROOT);
+                    }
                     String group = getStrByRegex(GROUP_PATTERN, line);
                     if (linkedHashMap.containsKey(group)) {
                         channelTemp = linkedHashMap.get(group);
@@ -51,7 +63,7 @@ public class TxtSubscribe {
                         urls = new ArrayList<>();
                         channelTemp.put(name, urls);
                     }
-                } else if (!line.startsWith("#EXT")) {//多条源开始获取
+                } else if (!line.startsWith("#EXT")) { // 多条源开始获取
                     if (urls != null && !urls.contains(line)) urls.add(line);
                 }
             }
@@ -60,6 +72,7 @@ public class TxtSubscribe {
             e.printStackTrace();
         }
     }
+
 
     private static String getStrByRegex(Pattern pattern, String line) {
         Matcher matcher = pattern.matcher(line);

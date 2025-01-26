@@ -127,7 +127,8 @@ public class M3U8 {
     private static String get(String tsUrlPre, String m3u8Content) {
         m3u8Content = m3u8Content.replaceAll("\r\n", "\n");
         StringBuilder sb = new StringBuilder();
-        for (String line : m3u8Content.split("\n")) sb.append(shouldResolve(line) ? resolve(tsUrlPre, line) : line).append("\n");
+        for (String line : m3u8Content.split("\n"))
+            sb.append(shouldResolve(line) ? resolve(tsUrlPre, line) : line).append("\n");
         List<String> ads = getRegex(tsUrlPre);
         if (ads == null || ads.isEmpty()) return null;
         return clean(sb.toString(), ads);
@@ -148,7 +149,8 @@ public class M3U8 {
     private static String clean(String line, List<String> ads) {
         boolean scan = false;
         for (String ad : ads) {
-            if (ad.contains(TAG_DISCONTINUITY) || ad.contains(TAG_MEDIA_DURATION)) line = line.replaceAll(ad, "");
+            if (ad.contains(TAG_DISCONTINUITY) || ad.contains(TAG_MEDIA_DURATION))
+                line = line.replaceAll(ad, "");
             else if (isDouble(ad)) scan = true;
         }
         return scan ? scan(line, ads) : line;
@@ -161,7 +163,9 @@ public class M3U8 {
             BigDecimal t = BigDecimal.ZERO;
             Matcher m2 = REGEX_MEDIA_DURATION.matcher(group);
             while (m2.find()) t = t.add(new BigDecimal(m2.group(1)));
-            for (String ad : ads) if (t.toString().startsWith(ad)) line = line.replace(group.replace(TAG_ENDLIST, ""), "");
+            for (String ad : ads)
+                if (t.toString().startsWith(ad))
+                    line = line.replace(group.replace(TAG_ENDLIST, ""), "");
         }
         return line;
     }
