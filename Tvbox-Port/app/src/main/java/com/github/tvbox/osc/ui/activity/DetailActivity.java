@@ -29,7 +29,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.ConvertUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NotificationUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ServiceUtils;
@@ -42,10 +41,10 @@ import com.github.tvbox.osc.base.BaseVbActivity;
 import com.github.tvbox.osc.bean.AbsXml;
 import com.github.tvbox.osc.bean.CastVideo;
 import com.github.tvbox.osc.bean.Movie;
-import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.RoomDataManger;
+import com.github.tvbox.osc.callback.DLNACallback;
 import com.github.tvbox.osc.constant.Constants;
 import com.github.tvbox.osc.databinding.ActivityDetailBinding;
 import com.github.tvbox.osc.event.RefreshEvent;
@@ -310,8 +309,20 @@ public class DetailActivity extends BaseVbActivity<ActivityDetailBinding> {
         VodInfo.VodSeries vodSeries = vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex);
         new XPopup.Builder(this)
                 .maxWidth(ConvertUtils.dp2px(360))
-                .asCustom(new CastListDialog(this, new CastVideo(vodSeries.name
-                        , TextUtils.isEmpty(playFragment.getFinalUrl()) ? vodSeries.url : playFragment.getFinalUrl())))
+                .asCustom(
+                        new CastListDialog(this,
+                                new CastVideo(vodSeries.name, TextUtils.isEmpty(playFragment.getFinalUrl()) ? vodSeries.url : playFragment.getFinalUrl()),
+                                new DLNACallback() {
+                                    @Override
+                                    public void onClose() {
+                                    }
+
+                                    @Override
+                                    public void onDLNA() {
+                                        ToastUtils.showShort(getString(R.string.tip_dlna));
+                                        playFragment.getPlayer().release();
+                                    }
+                                }))
                 .show();
     }
 

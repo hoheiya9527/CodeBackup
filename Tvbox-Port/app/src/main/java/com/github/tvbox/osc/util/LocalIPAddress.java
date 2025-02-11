@@ -49,6 +49,7 @@ public class LocalIPAddress {
         }
         return "127.0.0.1";
     }
+
     public static String getIP(Context context) {
         try {
             WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -65,7 +66,7 @@ public class LocalIPAddress {
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                return getLocalIPAddress();
+                return getLocalIPAddress(context);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

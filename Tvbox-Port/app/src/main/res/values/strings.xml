@@ -23,6 +23,7 @@
              </string>
     <string name="url_main">主地址</string>
     <string name="url_backup">备用地址</string>
+    <string name="tip_dlna">已投屏成功，本机暂停播放</string>
 
     <string-array name="doh_name">
         <item>System</item>

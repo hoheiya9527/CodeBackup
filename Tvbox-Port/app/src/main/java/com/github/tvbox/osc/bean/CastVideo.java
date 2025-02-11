@@ -9,10 +9,14 @@ import java.util.UUID;
 public class CastVideo implements ICast {
 
     private final String name;
-    private final String url;
+    private String url;
 
     public CastVideo(String name, String url) {
         this.name = name;
+        this.url = url;
+    }
+
+    public void setUrl(String url) {
         this.url = url;
     }
 

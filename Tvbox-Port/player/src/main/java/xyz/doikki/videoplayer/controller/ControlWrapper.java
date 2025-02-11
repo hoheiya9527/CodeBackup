@@ -151,6 +151,7 @@ public class ControlWrapper implements MediaPlayerControl, IVideoController {
         }
     }
 
+
     /**
      * 横竖屏切换，会旋转屏幕
      */
