@@ -397,6 +397,13 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         }
     }
 
+    public void setKeepScreenOn(boolean on) {
+        if (mPlayerContainer == null) {
+            return;
+        }
+        mPlayerContainer.setKeepScreenOn(on);
+    }
+
     /**
      * 保存播放进度
      */

@@ -392,6 +392,9 @@ public abstract class BaseVideoController extends FrameLayout
         mControlWrapper.togglePlay();
     }
 
+    public void pausePlay() {
+        mControlWrapper.pause();
+    }
 
     /**
      * 横竖屏切换

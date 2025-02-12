@@ -48,6 +48,7 @@ import com.github.tvbox.osc.callback.DLNACallback;
 import com.github.tvbox.osc.constant.Constants;
 import com.github.tvbox.osc.databinding.ActivityDetailBinding;
 import com.github.tvbox.osc.event.RefreshEvent;
+import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.receiver.BatteryReceiver;
 import com.github.tvbox.osc.service.PlayService;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
@@ -320,7 +321,9 @@ public class DetailActivity extends BaseVbActivity<ActivityDetailBinding> {
                                     @Override
                                     public void onDLNA() {
                                         ToastUtils.showShort(getString(R.string.tip_dlna));
-                                        playFragment.getPlayer().release();
+                                        MyVideoView player = playFragment.getPlayer();
+                                        player.release();
+                                        player.setKeepScreenOn(true);
                                     }
                                 }))
                 .show();
