@@ -369,7 +369,6 @@ public class PlayFragment extends BaseLazyFragment {
                     .fitsSystemWindows(false).init();
         } else {//非全屏统一设置竖屏,activity处理为小的预览尺寸
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
             ImmersionBar.with(mActivity).hideBar(BarHide.FLAG_SHOW_BAR).navigationBarColor(R.color.white).fitsSystemWindows(true).init();
         }
 

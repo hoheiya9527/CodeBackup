@@ -34,6 +34,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
     @Override
     public void initPlayer() {
         mMediaPlayer = new IjkMediaPlayer();
+        mMediaPlayer.setContext(mAppContext);
         //native日志
         IjkMediaPlayer.native_setLogLevel(VideoViewManager.getConfig().mIsEnableLog ? IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_SILENT);
         setOptions();
@@ -203,7 +204,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
 
     @Override
     public float getSpeed() {
-        return mMediaPlayer.getSpeed(0);
+        return mMediaPlayer.getSpeed();
     }
 
     @Override

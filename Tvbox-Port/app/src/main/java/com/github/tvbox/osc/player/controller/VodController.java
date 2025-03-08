@@ -3,6 +3,7 @@ package com.github.tvbox.osc.player.controller;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -80,7 +81,7 @@ public class VodController extends BaseController {
                         mBottomRoot.setVisibility(VISIBLE);
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
-                        if (!isLock){// 未上锁,随底部显示
+                        if (!isLock) {// 未上锁,随底部显示
                             mLockView.setVisibility(VISIBLE);
                         }
                         mNextBtn.requestFocus();
@@ -90,7 +91,7 @@ public class VodController extends BaseController {
                         mBottomRoot.setVisibility(GONE);
                         mTopRoot1.setVisibility(GONE);
                         mTopRoot2.setVisibility(GONE);
-                        if (!isLock){// 未上锁,随底部隐藏
+                        if (!isLock) {// 未上锁,随底部隐藏
                             mLockView.setVisibility(GONE);
                         }
                         if (listener != null) {
@@ -184,10 +185,11 @@ public class VodController extends BaseController {
             mHandler.postDelayed(this, 1000);
         }
     };
+
     private class LockRunnable implements Runnable {
         @Override
         public void run() {
-            if (isLock){//上锁的才隐藏,非上锁状态随操作栏显示隐藏
+            if (isLock) {//上锁的才隐藏,非上锁状态随操作栏显示隐藏
                 mLockView.setVisibility(GONE);
             }
         }
@@ -197,7 +199,7 @@ public class VodController extends BaseController {
     protected void initView() {
         super.initView();
         View pip = findViewById(R.id.pip);
-        pip.setVisibility((Utils.supportsPiPMode() && Hawk.get(HawkConfig.BACKGROUND_PLAY_TYPE, 0) == 2)?VISIBLE:GONE);
+        pip.setVisibility((Utils.supportsPiPMode() && Hawk.get(HawkConfig.BACKGROUND_PLAY_TYPE, 0) == 2) ? VISIBLE : GONE);
         mMyBatteryView = findViewById(R.id.battery);
         mTopRightDeviceInfo = findViewById(R.id.container_top_right_device_info);
         mLlSpeed = findViewById(R.id.ll_speed);
@@ -242,12 +244,12 @@ public class VodController extends BaseController {
 
         mLockView.setOnClickListener(v -> {
             isLock = !isLock;
-            if (isLock){// 上了锁
+            if (isLock) {// 上了锁
                 mLockView.setImageResource(R.drawable.ic_lock);
                 hideBottom();
                 mHandler.removeCallbacks(lockRunnable);
-                mHandler.postDelayed(lockRunnable,dismissTimeLock);
-            }else {// 解了锁
+                mHandler.postDelayed(lockRunnable, dismissTimeLock);
+            } else {// 解了锁
                 mLockView.setImageResource(R.drawable.ic_unlock);
                 showBottom();
                 myHandle.removeCallbacks(myRunnable);
@@ -368,7 +370,7 @@ public class VodController extends BaseController {
             hideBottom();
         });
         pip.setOnClickListener(view -> {//画中画
-            if (isInPlaybackState()){
+            if (isInPlaybackState()) {
                 listener.pip();
                 hideBottom();
             }
@@ -676,9 +678,9 @@ public class VodController extends BaseController {
      * 横竖屏切换
      */
     void setLandscapePortrait() {
-        if (com.blankj.utilcode.util.ScreenUtils.isPortrait()){
+        if (com.blankj.utilcode.util.ScreenUtils.isPortrait()) {
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }else {
+        } else {
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
     }
@@ -696,8 +698,8 @@ public class VodController extends BaseController {
 
     public void showParse(boolean userJxList) {
         //mParseRoot.setVisibility(userJxList ? VISIBLE : GONE);
-        if (listener!=null && mParseAdapter!=null){
-            listener.showParseRoot(userJxList,mParseAdapter);
+        if (listener != null && mParseAdapter != null) {
+            listener.showParseRoot(userJxList, mParseAdapter);
         }
     }
 
@@ -790,7 +792,7 @@ public class VodController extends BaseController {
 
         void pip();
 
-        void showParseRoot(boolean show,ParseAdapter adapter);
+        void showParseRoot(boolean show, ParseAdapter adapter);
     }
 
     public void setListener(VodControlListener listener) {
