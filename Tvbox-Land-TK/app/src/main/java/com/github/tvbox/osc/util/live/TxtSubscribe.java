@@ -41,7 +41,7 @@ public class TxtSubscribe {
                 if (line.startsWith("#EXTINF")) {
                     // 优先匹配 tvg-name，如果不存在则用原来的 NAME_PATTERN
                     String name = getStrByRegex(TVG_NAME_PATTERN, line);
-                    if (name == null || name.isEmpty()) {
+                    if (name.equals("未命名")) {
                         name = getStrByRegex(NAME_PATTERN, line); // 如果没有找到 tvg-name，回退到原始规则
                     }
                     if (!TextUtils.isEmpty(name)) {
