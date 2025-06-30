@@ -50,8 +50,7 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_about"
-                    app:tint="@color/text_foreground" />
+                    android:src="@drawable/ic_live_tv_48" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -61,7 +60,7 @@
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:gravity="center"
-                    android:text="切换配置"
+                    android:text="切换配置源"
                     android:textAlignment="gravity"
                     android:textColor="@color/text_foreground"
                     android:textSize="16sp" />

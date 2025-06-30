@@ -25,6 +25,8 @@ import com.github.tvbox.osc.ui.activity.MovieFoldersActivity;
 import com.github.tvbox.osc.ui.activity.SettingActivity;
 import com.github.tvbox.osc.ui.activity.SubscriptionActivity;
 import com.github.tvbox.osc.ui.dialog.AboutDialog;
+import com.github.tvbox.osc.ui.dialog.ApiHistoryDialog;
+import com.github.tvbox.osc.ui.dialog.ApiSelectDialog;
 import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.Utils;
@@ -63,11 +65,20 @@ public class MyFragment extends BaseVbFragment<FragmentMyBinding> {
         //mBinding.tvLive.setOnClickListener(v -> jumpActivity(LivePlayActivity.class));
         mBinding.tvLive.setOnClickListener(v -> jumpActivity(LiveActivity.class));
         mBinding.llUrlSwitch.setOnClickListener(view -> {
-            int type = Hawk.get(HawkConfig.API_TYPE, 0) + 1;
-            API api = API.get(type);
-            Hawk.put(HawkConfig.API_TYPE, api.getType());
-            mBinding.tvUrlSwitch.setText(api.getLabel());
-            updateUrl();
+//            int type = Hawk.get(HawkConfig.API_TYPE, 0) + 1;
+//            API api = API.get(type);
+//            Hawk.put(HawkConfig.API_TYPE, api.getType());
+//            mBinding.tvUrlSwitch.setText(api.getLabel());
+//            updateUrl()
+            new XPopup.Builder(getContext())
+                    .asCustom(new ApiSelectDialog(getContext(), api -> {
+//                        Toast.makeText(getContext(), "选择 " + api.getLabel(), Toast.LENGTH_SHORT).show();
+                        Hawk.put(HawkConfig.API_TYPE, api.getType());
+                        mBinding.tvUrlSwitch.setText(api.getLabel());
+                        updateUrl();
+                    }))
+                    .show();
+            ;
         });
         mBinding.tvUrlSwitch.setText(API.get(Hawk.get(HawkConfig.API_TYPE, 0)).getLabel());
         mBinding.tvSetting.setOnClickListener(v -> jumpActivity(SettingActivity.class));

@@ -4,40 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_dialog"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="10dp"
-    android:background="@drawable/bg_bottom_dialog">
+    android:paddingVertical="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:gravity="center_vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:text="请选择"
             android:textColor="@color/text_foreground"
-            android:text="请选择"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/iv_use_tip"
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:paddingLeft="10dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_use_description_24"/>
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_use_description_24" />
     </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constrainedHeight="true"
-        tools:listitem="@layout/item_stroke_button"
-        />
+        tools:listitem="@layout/item_stroke_button" />
 </LinearLayout>

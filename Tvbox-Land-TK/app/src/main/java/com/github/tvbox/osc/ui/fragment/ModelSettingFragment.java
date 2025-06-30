@@ -29,11 +29,12 @@ import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.AboutDialog;
 import com.github.tvbox.osc.ui.dialog.ApiDialog;
 import com.github.tvbox.osc.ui.dialog.ApiHistoryDialog;
+import com.github.tvbox.osc.ui.dialog.ApiSelectDialog;
 import com.github.tvbox.osc.ui.dialog.BackupDialog;
 import com.github.tvbox.osc.ui.dialog.HomeIconDialog;
 import com.github.tvbox.osc.ui.dialog.ProgressDialog;
-import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.ResetDialog;
+import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -53,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.jessyan.autosize.utils.AutoSizeUtils;
@@ -156,10 +158,20 @@ public class ModelSettingFragment extends BaseLazyFragment {
         //
         urlSwitchLL = findViewById(R.id.ll_url_switch);
         urlSwitchLL.setOnClickListener(view -> {
-            int type = Hawk.get(HawkConfig.API_TYPE, 0) + 1;
-            Hawk.put(HawkConfig.API_TYPE, API.get(type).getType());
-            showUrlSwitch();
-            updateUrl();
+//            int type = Hawk.get(HawkConfig.API_TYPE, 0) + 1;
+//            Hawk.put(HawkConfig.API_TYPE, API.get(type).getType());
+//            showUrlSwitch();
+//            updateUrl();
+            ApiSelectDialog apiSelectDialog = new ApiSelectDialog(getContext());
+            List<API> apis = Arrays.asList(API.values());
+            apiSelectDialog.setTip("请选择配置源");
+            apiSelectDialog.setAdapter(value -> {
+                apiSelectDialog.dismiss();
+                Hawk.put(HawkConfig.API_TYPE, value.getType());
+                showUrlSwitch();
+                updateUrl();
+            }, apis);
+            apiSelectDialog.show();
         });
         urlSwitchTv = findViewById(R.id.tv_url_switch);
         showUrlSwitch();

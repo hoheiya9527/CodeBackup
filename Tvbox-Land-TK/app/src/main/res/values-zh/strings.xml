@@ -191,6 +191,6 @@
     <string name="sub_style_text">字幕</string>
     <string name="url_main">主地址</string>
     <string name="url_backup">备用地址</string>
-    <string name="switch_url">切换配置：</string>
+    <string name="switch_url">切换配置源：</string>
 
 </resources>
