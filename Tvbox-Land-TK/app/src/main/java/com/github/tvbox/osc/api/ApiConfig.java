@@ -2,9 +2,10 @@ package com.github.tvbox.osc.api;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 
 import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
@@ -21,6 +22,7 @@ import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.github.tvbox.osc.util.AES;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.DocumentUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.MD5;
@@ -47,6 +49,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -225,7 +228,28 @@ public class ApiConfig {
         });
     }
 
+    /**
+     * 先进行URL校验替换
+     *
+     * @param useCache
+     * @param spider
+     * @param callback
+     */
     public void loadJar(boolean useCache, String spider, LoadConfigCallback callback) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            String[] urls = spider.split(";md5;");
+            String jarUrl = urls[0];
+            String toSpider = DocumentUtil.checkReplace(jarUrl);
+            if (urls.length > 1) {
+                toSpider = spider.replace(jarUrl, toSpider);
+            }
+            String finalSpider = toSpider;
+            new Handler(Looper.getMainLooper()).post(() -> loadJarOri(useCache, finalSpider, callback));
+        });
+    }
+
+    public void loadJarOri(boolean useCache, String spider, LoadConfigCallback callback) {
+        System.out.println("loadJarOri==> " + spider);
         String[] urls = spider.split(";md5;");
         String jarUrl = urls[0];
         String md5 = urls.length > 1 ? urls[1].trim() : "";
