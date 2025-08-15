@@ -77,7 +77,7 @@ public class ApiSelectAdapter extends ListAdapter<API, ApiSelectAdapter.SelectVi
     public void onBindViewHolder(@NonNull @NotNull ApiSelectAdapter.SelectViewHolder holder, int position) {
         API value = data.get(position);
         API api = API.get(Hawk.get(HawkConfig.API_TYPE, 0));
-        ((TextView) holder.itemView.findViewById(R.id.tv_select)).setText(api.getType() == value.getType() ? "√" : "");
+        ((TextView) holder.itemView.findViewById(R.id.tv_select)).setText(api.getType() == value.getType() ? "√" : " ");
         ((TextView) holder.itemView.findViewById(R.id.tvName)).setText(value.getLabel());
         holder.itemView.findViewById(R.id.tvName).setOnClickListener(v -> {
             dialogInterface.click(value);
