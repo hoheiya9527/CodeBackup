@@ -490,6 +490,7 @@ public class ApiConfig {
                             if (url.startsWith("http")) {
                                 // takagen99: Capture Live URL into Settings
                                 System.out.println("Live URL :" + url);
+                                url = DocumentUtil.checkReplace(url);//校验直播地址有效性
                                 putLiveHistory(url);
                                 // Overwrite with Live URL from Settings
 //                                if (StringUtils.isBlank(liveURL)) {
