@@ -825,7 +825,7 @@ public class LivePlayActivity extends BaseActivity {
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
-        mVideoView.setUrl(currentLiveChannelItem.getUrl());
+        mVideoView.setUrl(currentLiveChannelItem.getUrl(),ApiConfig.get().getLiveHeader());
         // showChannelInfo();
         mVideoView.start();
         return true;
@@ -973,7 +973,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
-                    mVideoView.setUrl(currentLiveChannelItem.getUrl());
+                    mVideoView.setUrl(currentLiveChannelItem.getUrl(),ApiConfig.get().getLiveHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(-1, false, timeFormat.format(date));
                     showProgressBars(false);
@@ -1002,7 +1002,7 @@ public class LivePlayActivity extends BaseActivity {
                     }
                     playUrl = shiyiUrl;
 
-                    mVideoView.setUrl(playUrl);
+                    mVideoView.setUrl(playUrl,ApiConfig.get().getLiveHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
@@ -1048,7 +1048,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
-                    mVideoView.setUrl(currentLiveChannelItem.getUrl());
+                    mVideoView.setUrl(currentLiveChannelItem.getUrl(),ApiConfig.get().getLiveHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(-1, false, timeFormat.format(date));
                     showProgressBars(false);
@@ -1078,7 +1078,7 @@ public class LivePlayActivity extends BaseActivity {
                     }
                     playUrl = shiyiUrl;
 
-                    mVideoView.setUrl(playUrl);
+                    mVideoView.setUrl(playUrl,ApiConfig.get().getLiveHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
@@ -1514,7 +1514,7 @@ public class LivePlayActivity extends BaseActivity {
             case 2://播放解码
                 mVideoView.release();
                 livePlayerManager.changeLivePlayerType(mVideoView, position, currentLiveChannelItem.getChannelName());
-                mVideoView.setUrl(currentLiveChannelItem.getUrl());
+                mVideoView.setUrl(currentLiveChannelItem.getUrl(),ApiConfig.get().getLiveHeader());
                 mVideoView.start();
                 break;
             case 3://超时换源

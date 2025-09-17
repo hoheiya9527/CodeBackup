@@ -408,6 +408,13 @@ public class ApiConfig {
             if (infoJson.has("lives") && infoJson.get("lives").getAsJsonArray() != null) {
                 JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
                 String lives = livesOBJ.toString();
+                //parseUserAgent
+                if (livesOBJ.has("ua")) {
+                    String ua = livesOBJ.get("ua").getAsString();
+                    Log.d("TEST", ">> live userAgent:" + ua);
+                    Hawk.put(HawkConfig.LIVE_UA, ua);
+                }
+                //
                 int index = lives.indexOf("proxy://");
                 if (index != -1) {
                     int endIndex = lives.lastIndexOf("\"");
@@ -462,7 +469,6 @@ public class ApiConfig {
 //                liveChannelGroupList.add(liveChannelGroup);
 
                 } else {
-
                     // if FongMi Live URL Formatting exists
                     if (!lives.contains("type")) {
                         loadLives(infoJson.get("lives").getAsJsonArray());
@@ -513,8 +519,6 @@ public class ApiConfig {
                 liveChannelGroup.setGroupName(liveURL_final);
                 liveChannelGroupList.add(liveChannelGroup);
             }
-
-
         } catch (Throwable th) {
             th.printStackTrace();
         }
@@ -693,6 +697,16 @@ public class ApiConfig {
         }
     }
 
+    public Map<String, String> getLiveHeader() {
+        String ua = Hawk.get(HawkConfig.LIVE_UA, "");
+        if (TextUtils.isEmpty(ua)) {
+            return null;
+        }
+        HashMap<String, String> header = new HashMap<>();
+        header.put("User-Agent", ua);
+        return header;
+    }
+
     public String getSpider() {
         return spider;
     }
@@ -715,6 +729,7 @@ public class ApiConfig {
     public JSONObject jsonExtMix(String flag, String key, String name, LinkedHashMap<String, HashMap<String, String>> jxs, String url) {
         return jarLoader.jsonExtMix(flag, key, name, jxs, url);
     }
+
 
     public interface LoadConfigCallback {
         void success();

@@ -173,8 +173,18 @@ dependencies {
     //崩溃
     implementation project(":crash")
     //dlna投屏
-    implementation 'com.github.devin1014.DLNA-Cast:dlna-dmc:V1.0.0'
-
+//    implementation 'com.github.devin1014.DLNA-Cast:dlna-dmc:V1.0.0'
     //
     implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+    //DLNA aar需要
+    // Cling library required
+    implementation 'org.fourthline.cling:cling-core:2.1.1'
+    implementation 'org.fourthline.cling:cling-support:2.1.1'
+    // Servlet
+    implementation 'javax.servlet:javax.servlet-api:3.1.0'
+    // Jetty
+    implementation 'org.eclipse.jetty:jetty-client:8.1.21.v20160908'
+    implementation('org.eclipse.jetty:jetty-server:8.1.21.v20160908') { exclude group: 'org.eclipse.jetty.orbit', module: 'javax.servlet' }
+    implementation('org.eclipse.jetty:jetty-servlet:8.1.21.v20160908') { exclude group: 'org.eclipse.jetty.orbit', module: 'javax.servlet' }
 }

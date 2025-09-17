@@ -77,6 +77,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import xyz.doikki.videocontroller.component.LiveControlView;
 import xyz.doikki.videocontroller.component.TitleView;
@@ -104,7 +105,7 @@ public class LiveActivity extends BaseActivity {
     private LiveSettingItemAdapter liveSettingItemAdapter;
     private List<LiveSettingGroup> liveSettingGroupList = new ArrayList<>();
 
-    public static  int currentChannelGroupIndex = 0;
+    public static int currentChannelGroupIndex = 0;
     private Handler mHandler = new Handler();
 
     private List<LiveChannelGroup> liveChannelGroupList = new ArrayList<>();
@@ -114,16 +115,16 @@ public class LiveActivity extends BaseActivity {
     private LivePlayerManager livePlayerManager = new LivePlayerManager();
     private ArrayList<Integer> channelGroupPasswordConfirmed = new ArrayList<>();
 
-//EPG   by 龍
-    private static LiveChannelItem  channel_Name = null;
+    //EPG   by 龍
+    private static LiveChannelItem channel_Name = null;
     private static Hashtable hsEpg = new Hashtable();
     private CountDownTimer countDownTimer;
-//    private CountDownTimer countDownTimerRightTop;
+    //    private CountDownTimer countDownTimerRightTop;
     TextView tv_channelnum;
     TextView tip_chname;
 
     TextView tv_srcinfo;
-    public String epgStringAddress ="";
+    public String epgStringAddress = "";
 
     private boolean isSHIYI = false;
     private boolean isBack = false;
@@ -134,7 +135,7 @@ public class LiveActivity extends BaseActivity {
     private CountDownTimer countDownTimer3;
     private int videoWidth = 1920;
     private int videoHeight = 1080;
-    private  boolean show = false;
+    private boolean show = false;
     private PlayerTitleView mPlayerTitleView;
     private BasePopupView mSettingRightDialog;
     private BasePopupView mSettingBottomDialog;
@@ -155,8 +156,8 @@ public class LiveActivity extends BaseActivity {
                 .hideBar(BarHide.FLAG_HIDE_NAVIGATION_BAR)
                 .init();
         context = this;
-        epgStringAddress = Hawk.get(HawkConfig.EPG_URL,"");
-        if(epgStringAddress == null || epgStringAddress.length()<5)
+        epgStringAddress = Hawk.get(HawkConfig.EPG_URL, "");
+        if (epgStringAddress == null || epgStringAddress.length() < 5)
             epgStringAddress = "http://epg.51zmt.top:8000/api/diyp/";
 
         setLoadSir(findViewById(R.id.live_root));
@@ -166,8 +167,8 @@ public class LiveActivity extends BaseActivity {
 
         mChannelGroupView = findViewById(R.id.mGroupGridView);
         mLiveChannelView = findViewById(R.id.mChannelGridView);
-        mChannelGroupView.addItemDecoration(new LinearSpacingItemDecoration(20,true));
-        mLiveChannelView.addItemDecoration(new LinearSpacingItemDecoration(20,true));
+        mChannelGroupView.addItemDecoration(new LinearSpacingItemDecoration(20, true));
+        mLiveChannelView.addItemDecoration(new LinearSpacingItemDecoration(20, true));
 
         tvRightSettingLayout = findViewById(R.id.tvRightSettingLayout);
         mSettingGroupView = findViewById(R.id.mSettingGroupView);
@@ -231,14 +232,14 @@ public class LiveActivity extends BaseActivity {
         if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
             mHandler.removeCallbacks(mHideSettingLayoutRun);
             mHandler.post(mHideSettingLayoutRun);
-        } else if(isBack){
-            isBack= false;
+        } else if (isBack) {
+            isBack = false;
             playPreSource();
-        } else if(mSettingBottomDialog!=null && mSettingBottomDialog.isShow()){//适配底部导航栏(手势条闪屏)变成view模式后在back时手动隐藏
+        } else if (mSettingBottomDialog != null && mSettingBottomDialog.isShow()) {//适配底部导航栏(手势条闪屏)变成view模式后在back时手动隐藏
             mSettingBottomDialog.dismiss();
-        } else if(mSettingRightDialog!=null && mSettingRightDialog.isShow()){
+        } else if (mSettingRightDialog != null && mSettingRightDialog.isShow()) {
             mSettingRightDialog.dismiss();
-        }  else if(mAllChannelRightDialog!=null && mAllChannelRightDialog.isShow()){
+        } else if (mAllChannelRightDialog != null && mAllChannelRightDialog.isShow()) {
             mAllChannelRightDialog.dismiss();
         } else if (!mVideoView.onBackPressed()) {
             super.onBackPressed();
@@ -266,16 +267,16 @@ public class LiveActivity extends BaseActivity {
                             playNext();
                         break;
                     case KeyEvent.KEYCODE_DPAD_LEFT:
-                        if(isBack){
+                        if (isBack) {
 
-                        }else{
+                        } else {
                             //showSettingGroup();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
-                        if(isBack){
+                        if (isBack) {
 
-                        }else{
+                        } else {
                             playNextSource();
                         }
                         break;
@@ -326,11 +327,11 @@ public class LiveActivity extends BaseActivity {
         }
         //重新载入上一次状态
         liveChannelItemAdapter.setNewData(getLiveChannels(currentChannelGroupIndex));
-        if (currentLiveChannelIndex > -1){
+        if (currentLiveChannelIndex > -1) {
             mLiveChannelView.smoothScrollToPosition(currentLiveChannelIndex);
-            if (currentChannelGroupIndex==0){
+            if (currentChannelGroupIndex == 0) {
                 mChannelGroupView.scrollToPosition(currentChannelGroupIndex);
-            }else {
+            } else {
                 mChannelGroupView.smoothScrollToPosition(currentChannelGroupIndex);
             }
         }
@@ -368,7 +369,7 @@ public class LiveActivity extends BaseActivity {
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
                 || (changeSource && currentLiveChannelItem.getSourceNum() == 1)) {
-           // showChannelInfo();
+            // showChannelInfo();
             return true;
         }
         mVideoView.release();
@@ -381,20 +382,21 @@ public class LiveActivity extends BaseActivity {
         }
 
         channel_Name = currentLiveChannelItem;
-        isSHIYI=false;
+        isSHIYI = false;
         isBack = false;
-        if(currentLiveChannelItem.getUrl().indexOf("PLTV/8888") !=-1){
+        if (currentLiveChannelItem.getUrl().indexOf("PLTV/8888") != -1) {
             currentLiveChannelItem.setinclude_back(true);
-        }else {
+        } else {
             currentLiveChannelItem.setinclude_back(false);
         }
         showBottomEpg();
 
-        mVideoView.setUrl(currentLiveChannelItem.getUrl());
-       // showChannelInfo();
+        mVideoView.setUrl(currentLiveChannelItem.getUrl(), ApiConfig.get().getLiveHeader());
+        // showChannelInfo();
         mVideoView.start();
         return true;
     }
+
 
     private void playNext() {
         if (!isCurrentLiveChannelValid()) return;
@@ -538,7 +540,7 @@ public class LiveActivity extends BaseActivity {
 
             @Override
             public void changeSource(int direction) {
-                if (direction > 0){
+                if (direction > 0) {
                     playNextSource();
                 } else {
                     playPreSource();
@@ -730,7 +732,7 @@ public class LiveActivity extends BaseActivity {
         switch (settingGroupIndex) {
             case 0://线路切换
                 currentLiveChannelItem.setSourceIndex(position);
-                playChannel(currentChannelGroupIndex, currentLiveChannelIndex,true);
+                playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
                 break;
             case 1://画面比例
                 livePlayerManager.changeLivePlayerScale(mVideoView, position, currentLiveChannelItem.getChannelName());
@@ -738,7 +740,7 @@ public class LiveActivity extends BaseActivity {
             case 2://播放解码
                 mVideoView.release();
                 livePlayerManager.changeLivePlayerType(mVideoView, position, currentLiveChannelItem.getChannelName());
-                mVideoView.setUrl(currentLiveChannelItem.getUrl());
+                mVideoView.setUrl(currentLiveChannelItem.getUrl(), ApiConfig.get().getLiveHeader());
                 mVideoView.start();
                 break;
             case 3://超时换源
@@ -781,8 +783,7 @@ public class LiveActivity extends BaseActivity {
 
         if (list.size() == 1 && list.get(0).getGroupName().startsWith("http://127.0.0.1")) {
             loadProxyLives(list.get(0).getGroupName());
-        }
-        else {
+        } else {
             liveChannelGroupList.clear();
             liveChannelGroupList.addAll(list);
             showSuccess();
@@ -948,17 +949,16 @@ public class LiveActivity extends BaseActivity {
             if (currentLiveChannelIndex > -1)
                 mLiveChannelView.smoothScrollToPosition(currentLiveChannelIndex);
             liveChannelItemAdapter.setSelectedChannelIndex(currentLiveChannelIndex);
-        }
-        else {
+        } else {
             mLiveChannelView.smoothScrollToPosition(0);
             liveChannelItemAdapter.setSelectedChannelIndex(-1);
         }
 
         if (liveChannelIndex > -1) {
             clickLiveChannel(liveChannelIndex);
-            if (groupIndex==0){//部分手机smoothScrollToPosition向上划出屏幕
+            if (groupIndex == 0) {//部分手机smoothScrollToPosition向上划出屏幕
                 mChannelGroupView.scrollToPosition(groupIndex);
-            }else {
+            } else {
                 mChannelGroupView.smoothScrollToPosition(groupIndex);
             }
 
@@ -1043,7 +1043,7 @@ public class LiveActivity extends BaseActivity {
     }
 
     //计算两个时间相差的秒数
-    public static long getTime(String startTime, String endTime)  {
+    public static long getTime(String startTime, String endTime) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long eTime = 0;
         try {
@@ -1060,27 +1060,28 @@ public class LiveActivity extends BaseActivity {
         long diff = (eTime - sTime) / 1000;
         return diff;
     }
-    private  String durationToString(int duration) {
+
+    private String durationToString(int duration) {
         String result = "";
         int dur = duration / 1000;
-        int hour=dur/3600;
+        int hour = dur / 3600;
         int min = (dur / 60) % 60;
         int sec = dur % 60;
-        if(hour>0){
+        if (hour > 0) {
             if (min > 9) {
                 if (sec > 9) {
-                    result =hour+":"+ min + ":" + sec;
+                    result = hour + ":" + min + ":" + sec;
                 } else {
-                    result =hour+":"+ min + ":0" + sec;
+                    result = hour + ":" + min + ":0" + sec;
                 }
             } else {
                 if (sec > 9) {
-                    result =hour+":"+ "0" + min + ":" + sec;
+                    result = hour + ":" + "0" + min + ":" + sec;
                 } else {
-                    result = hour+":"+"0" + min + ":0" + sec;
+                    result = hour + ":" + "0" + min + ":0" + sec;
                 }
             }
-        }else{
+        } else {
             if (min > 9) {
                 if (sec > 9) {
                     result = min + ":" + sec;
@@ -1089,7 +1090,7 @@ public class LiveActivity extends BaseActivity {
                 }
             } else {
                 if (sec > 9) {
-                    result ="0" + min + ":" + sec;
+                    result = "0" + min + ":" + sec;
                 } else {
                     result = "0" + min + ":0" + sec;
                 }
@@ -1110,60 +1111,64 @@ public class LiveActivity extends BaseActivity {
     }
 
     public void showCastDialog() {
-        if (currentLiveChannelItem!=null){
+        if (currentLiveChannelItem != null) {
             new XPopup.Builder(this)
                     .maxWidth(ConvertUtils.dp2px(360))
-                    .asCustom(new CastListDialog(this,new CastVideo(currentLiveChannelItem.getChannelName(),currentLiveChannelItem.getUrl())))
+                    .asCustom(new CastListDialog(this, new CastVideo(currentLiveChannelItem.getChannelName(), currentLiveChannelItem.getUrl())))
                     .show();
         }
     }
 
-    public LivePlayerManager getLivePlayerManager(){
+    public LivePlayerManager getLivePlayerManager() {
         return livePlayerManager;
     }
 
-    public LiveChannelItem getCurrentLiveChannelItem(){
+    public LiveChannelItem getCurrentLiveChannelItem() {
         return currentLiveChannelItem;
     }
 
     /**
      * 切换某个线路播放
+     *
      * @param position
      */
-    public void switchingLine2Replay(int position){
+    public void switchingLine2Replay(int position) {
         currentLiveChannelItem.setSourceIndex(position);
-        playChannel(currentChannelGroupIndex, currentLiveChannelIndex,true);
+        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
     }
 
     /**
      * 切换缩放比例
+     *
      * @param position
      */
-    public void changeScale(int position){
+    public void changeScale(int position) {
         livePlayerManager.changeLivePlayerScale(mVideoView, position, currentLiveChannelItem.getChannelName());
     }
 
     /**
      * 更换播放解码
+     *
      * @param position
      */
-    public void changePlayer(int position){
+    public void changePlayer(int position) {
         mVideoView.release();
         livePlayerManager.changeLivePlayerType(mVideoView, position, currentLiveChannelItem.getChannelName());
-        mVideoView.setUrl(currentLiveChannelItem.getUrl());
+        mVideoView.setUrl(currentLiveChannelItem.getUrl(), ApiConfig.get().getLiveHeader());
         mVideoView.start();
     }
 
     /**
      * 设置弹窗
+     *
      * @param fullScreenStyle 全屏显示侧边弹窗
      */
     private void showSettingDialog(boolean fullScreenStyle) {
-        if (!isCurrentLiveChannelValid()){
+        if (!isCurrentLiveChannelValid()) {
             ToastUtils.showShort("当前频道未加载");
             return;
         }
-        if (fullScreenStyle){
+        if (fullScreenStyle) {
             mSettingRightDialog = new XPopup.Builder(this)
                     .isViewMode(true)
                     .hasNavigationBar(false)
@@ -1173,10 +1178,10 @@ public class LiveActivity extends BaseActivity {
                     .popupPosition(PopupPosition.Right)
                     .asCustom(new LiveSettingRightDialog(this));
             mSettingRightDialog.show();
-        }else {
+        } else {
             mSettingBottomDialog = new XPopup.Builder(this)
                     .isViewMode(true)
-                    .popupHeight(ScreenUtils.getScreenHeight()/2)
+                    .popupHeight(ScreenUtils.getScreenHeight() / 2)
                     .hasNavigationBar(false)
                     .hasShadowBg(false)
                     .asCustom(new LiveSettingDialog(this));

@@ -26,7 +26,7 @@ public class CastDevicesAdapter extends BaseQuickAdapter<Device, BaseViewHolder>
 
     @Override
     protected void convert(BaseViewHolder helper, Device item) {
-        helper.setText(R.id.title,item.getDetails().getFriendlyName());
+        helper.setText(R.id.title, item.getDetails().getFriendlyName());
     }
 
     @Override
@@ -34,10 +34,6 @@ public class CastDevicesAdapter extends BaseQuickAdapter<Device, BaseViewHolder>
         addData(device);
     }
 
-    @Override
-    public void onDeviceUpdated(Device<?, ?, ?> device) {
-
-    }
 
     @Override
     public void onDeviceRemoved(Device<?, ?, ?> device) {

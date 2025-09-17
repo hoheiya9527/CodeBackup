@@ -2,29 +2,32 @@ package com.github.tvbox.osc.ui.dialog;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.cast.dlna.dmc.DLNACastManager;
-import com.blankj.utilcode.util.GsonUtils;
-import com.blankj.utilcode.util.LogUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.android.cast.dlna.dmc.control.DeviceControl;
+import com.android.cast.dlna.dmc.control.OnDeviceControlListener;
+import com.android.cast.dlna.dmc.control.ServiceActionCallback;
+import com.blankj.utilcode.util.ToastUtils;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.CastVideo;
 import com.github.tvbox.osc.callback.DLNACallback;
 import com.github.tvbox.osc.ui.adapter.CastDevicesAdapter;
 import com.github.tvbox.osc.util.LocalIPAddress;
-import com.lxj.xpopup.core.BottomPopupView;
 import com.lxj.xpopup.core.CenterPopupView;
 
 import org.fourthline.cling.model.meta.Device;
+import org.fourthline.cling.support.lastchange.EventedValue;
+import org.fourthline.cling.support.model.TransportState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import kotlin.Unit;
 
 public class CastListDialog extends CenterPopupView {
 
@@ -32,6 +35,7 @@ public class CastListDialog extends CenterPopupView {
     private final CastVideo castVideo;
     private CastDevicesAdapter adapter;
     private DLNACallback dlnaCallback;
+    private DeviceControl deviceControl;
 
     public CastListDialog(@NonNull @NotNull Context context, CastVideo castVideo) {
         super(context);
@@ -67,7 +71,7 @@ public class CastListDialog extends CenterPopupView {
     @Override
     protected void onCreate() {
         super.onCreate();
-        DLNACastManager.getInstance().bindCastService(App.getInstance());
+        DLNACastManager.INSTANCE.bindCastService(App.getInstance());
         findViewById(R.id.btn_cancel).setOnClickListener(view -> {
             dismiss();
             if (dlnaCallback != null) {
@@ -76,18 +80,19 @@ public class CastListDialog extends CenterPopupView {
         });
         findViewById(R.id.btn_confirm).setOnClickListener(view -> {
             adapter.setNewData(new ArrayList<>());
-            DLNACastManager.getInstance().search(null, 1);
+            DLNACastManager.INSTANCE.search(null);
         });
         RecyclerView rv = findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CastDevicesAdapter();
         rv.setAdapter(adapter);
-        DLNACastManager.getInstance().registerDeviceListener(adapter);
+        DLNACastManager.INSTANCE.registerDeviceListener(adapter);
 
         adapter.setOnItemClickListener((adapter, view, position) -> {
             Device item = (Device) adapter.getItem(position);
             if (item != null) {
-                DLNACastManager.getInstance().cast(item, castVideo);
+                cast(item, castVideo);
+//                DLNACastManager.INSTANCE.cast(item, castVideo);
                 dismiss();
                 if (dlnaCallback != null) {
                     dlnaCallback.onDLNA();
@@ -96,10 +101,61 @@ public class CastListDialog extends CenterPopupView {
         });
     }
 
+    private void cast(Device item, CastVideo castVideo) {
+        deviceControl = DLNACastManager.INSTANCE.connectDevice(item,
+                new OnDeviceControlListener() {
+                    @Override
+                    public void onConnected(@NonNull Device<?, ?, ?> device) {
+                        if (deviceControl == null) {
+                            return;
+                        }
+                        ToastUtils.showShort("设备[" + item.getDetails().getFriendlyName() + "] 连接成功");
+                        deviceControl.setAVTransportURI(castVideo.getUri(), castVideo.getName(),
+                                new ServiceActionCallback<Unit>() {
+                                    @Override
+                                    public void onSuccess(Unit unit) {
+                                        ToastUtils.showShort("投放成功");
+                                    }
+
+                                    @Override
+                                    public void onFailure(@NonNull String s) {
+                                        ToastUtils.showShort("投放失败，" + s);
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onDisconnected(@NonNull Device<?, ?, ?> device) {
+                        ToastUtils.showShort("设备[" + item.getDetails().getFriendlyName() + "] 连接已断开");
+                    }
+
+                    @Override
+                    public void onEventChanged(@NonNull EventedValue<?> eventedValue) {
+
+                    }
+
+                    @Override
+                    public void onAvTransportStateChanged(@NonNull TransportState transportState) {
+
+                    }
+
+                    @Override
+                    public void onRendererVolumeChanged(int i) {
+
+                    }
+
+                    @Override
+                    public void onRendererVolumeMuteChanged(boolean b) {
+
+                    }
+                });
+
+    }
+
     @Override
     protected void onDismiss() {
         super.onDismiss();
-        DLNACastManager.getInstance().unregisterListener(adapter);
-        DLNACastManager.getInstance().unbindCastService(App.getInstance());
+        DLNACastManager.INSTANCE.unregisterListener(adapter);
+        DLNACastManager.INSTANCE.unbindCastService(App.getInstance());
     }
 }
