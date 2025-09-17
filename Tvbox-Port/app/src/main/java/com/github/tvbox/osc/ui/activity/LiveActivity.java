@@ -13,7 +13,6 @@ import android.util.Base64;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -72,15 +71,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import xyz.doikki.videocontroller.component.LiveControlView;
-import xyz.doikki.videocontroller.component.TitleView;
 import xyz.doikki.videoplayer.player.VideoView;
 
 /**
@@ -380,7 +376,6 @@ public class LiveActivity extends BaseActivity {
             Hawk.put(HawkConfig.LIVE_CHANNEL, currentLiveChannelItem.getChannelName());
             livePlayerManager.getLiveChannelPlayer(mVideoView, currentLiveChannelItem.getChannelName());
         }
-
         channel_Name = currentLiveChannelItem;
         isSHIYI = false;
         isBack = false;

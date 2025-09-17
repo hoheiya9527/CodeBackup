@@ -126,9 +126,9 @@ public class IjkMediaPlayer extends IjkPlayer {
             if (!TextUtils.isEmpty(userAgent)) {
                 mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
                 // 移除header中的User-Agent，防止重复
-                headers.remove("User-Agent");
+//                headers.remove("User-Agent");
             }
-            if (headers.size() > 0) {
+            if (!headers.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
                 for (Map.Entry<String, String> entry : headers.entrySet()) {
                     sb.append(entry.getKey());

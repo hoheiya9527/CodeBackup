@@ -184,7 +184,7 @@ public final class ExoMediaSourceHelper {
         if (headers != null && headers.size() > 0) {
             //如果发现用户通过header传递了UA，则强行将HttpDataSourceFactory里面的userAgent字段替换成用户的
             if (headers.containsKey("User-Agent")) {
-                String value = headers.remove("User-Agent");
+                String value = headers.get("User-Agent");
                 if (!TextUtils.isEmpty(value)) {
                     try {
                         Field userAgentField = mHttpDataSourceFactory.getClass().getDeclaredField("userAgent");

@@ -66,7 +66,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
                     if (!TextUtils.isEmpty(userAgent)) {
                         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
                         // 移除header中的User-Agent，防止重复
-                        headers.remove("User-Agent");
+//                        headers.remove("User-Agent");
                     }
                 }
                 mMediaPlayer.setDataSource(mAppContext, uri, headers);

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -308,6 +309,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
             mMediaPlayer.setDataSource(mAssetFileDescriptor);
             return true;
         } else if (!TextUtils.isEmpty(mUrl)) {
+            Log.d("hoheiya", "prepareDataSource mHeaders:" + mHeaders);
             mMediaPlayer.setDataSource(mUrl, mHeaders);
             return true;
         }
