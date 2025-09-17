@@ -84,6 +84,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import xyz.doikki.videoplayer.player.VideoView;
@@ -174,39 +175,41 @@ public class LivePlayActivity extends BaseActivity {
     private static String shiyi_time;//时移时间
     private View lineView;
 
-    private HashMap<String, String> setPlayHeaders(String url) {
-        HashMap<String, String> header = new HashMap();
-        try {
-            boolean matchTo = false;
-            JSONArray livePlayHeaders = new JSONArray(ApiConfig.get().getLivePlayHeaders().toString());
-            for (int i = 0; i < livePlayHeaders.length(); i++) {
-                JSONObject headerObj = livePlayHeaders.getJSONObject(i);
-                JSONArray flags = headerObj.getJSONArray("flag");
-                JSONObject headerData = headerObj.getJSONObject("header");
-                for (int j = 0; j < flags.length(); j++) {
-                    String flag = flags.getString(j);
-                    if (url.contains(flag)) {
-                        matchTo = true;
-                        break;
-                    }
-                }
-                if (matchTo) {
-                    Iterator<String> keys = headerData.keys();
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        String value = headerData.getString(key);
-                        header.put(key, value);
-                    }
-                    break;
-                }
-            }
-            if (!matchTo) {
-                header.put("User-Agent", "Lavf/59.27.100");
-            }
-        } catch (Exception e) {
-            header.put("User-Agent", "Lavf/59.27.100");
-        }
-        return header;
+    private Map<String, String> setPlayHeaders(String url) {
+//        HashMap<String, String> header = new HashMap();
+//        try {
+//            boolean matchTo = false;
+//            JSONArray livePlayHeaders = new JSONArray(ApiConfig.get().getLivePlayHeaders().toString());
+//            for (int i = 0; i < livePlayHeaders.length(); i++) {
+//                JSONObject headerObj = livePlayHeaders.getJSONObject(i);
+//                JSONArray flags = headerObj.getJSONArray("flag");
+//                JSONObject headerData = headerObj.getJSONObject("header");
+//                for (int j = 0; j < flags.length(); j++) {
+//                    String flag = flags.getString(j);
+//                    if (url.contains(flag)) {
+//                        matchTo = true;
+//                        break;
+//                    }
+//                }
+//                if (matchTo) {
+//                    Iterator<String> keys = headerData.keys();
+//                    while (keys.hasNext()) {
+//                        String key = keys.next();
+//                        String value = headerData.getString(key);
+//                        header.put(key, value);
+//                    }
+//                    break;
+//                }
+//            }
+//            if (!matchTo) {
+//                header.put("User-Agent", "Lavf/59.27.100");
+//            }
+//        } catch (Exception e) {
+//            header.put("User-Agent", "Lavf/59.27.100");
+//        }
+//        return header;
+
+        return ApiConfig.get().getLiveHeader();
     }
 
     @Override
@@ -758,7 +761,7 @@ public class LivePlayActivity extends BaseActivity {
         @Override
         public void run() {
             Date date = new Date();
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm",Locale.getDefault());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             tv_sys_time.setText(timeFormat.format(date));
             mHandler.postDelayed(this, 1000);
 
