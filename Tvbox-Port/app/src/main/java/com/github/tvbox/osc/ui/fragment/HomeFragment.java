@@ -282,7 +282,7 @@ public class HomeFragment extends BaseVbFragment<FragmentHomeBinding> {
             fragments.clear();
             for (MovieSort.SortData data : mSortDataList) {
                 //
-//                Log.d("test", "==initViewPager data.name==" + data.name);
+                Log.d("test", "==initViewPager data.name==" + data.name);
                 //
                 mBinding.tabLayout.addView(getTabTextView(StringUtils.filterStr(data.name)));
 
