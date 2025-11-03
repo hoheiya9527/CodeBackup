@@ -43,4 +43,12 @@ public class LOG {
         Log.i(tag, msg);
         EventBus.getDefault().post(new LogEvent(String.format("【I/%s】=>>>", tag) + msg));
     }
+
+    public static void w(String tag, String msg) {
+        Log.w(tag, String.format("【W/%s】=>>>", tag) + msg);
+    }
+
+    public static void d(String tag, String msg) {
+        Log.d(tag, String.format("【D/%s】=>>>", tag) + msg);
+    }
 }

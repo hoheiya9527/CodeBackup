@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 16 横屏专用 - 放大1.8倍 -->
+    <!-- Text Size -->
+    <dimen name="ts_10">18mm</dimen>
+    <dimen name="ts_12">21.6mm</dimen>
+    <dimen name="ts_14">25.2mm</dimen>
+    <dimen name="ts_15">27mm</dimen>
+    <dimen name="ts_16">28.8mm</dimen>
+    <dimen name="ts_18">32.4mm</dimen>
+    <dimen name="ts_20">36mm</dimen>
+    <dimen name="ts_22">39.6mm</dimen>
+    <dimen name="ts_24">43.2mm</dimen>
+    <dimen name="ts_26">46.8mm</dimen>
+    <dimen name="ts_30">54mm</dimen>
+    <dimen name="ts_34">61.2mm</dimen>
+    <dimen name="ts_36">64.8mm</dimen>
+    <dimen name="ts_40">72mm</dimen>
+    <dimen name="ts_50">90mm</dimen>
+
+    <!-- Negative Values -->
+    <dimen name="vs_4_">-7.2mm</dimen>
+    <dimen name="vs_20_">-36mm</dimen>
+
+    <!-- View Size -->
+    <dimen name="vs_0">0mm</dimen>
+    <dimen name="vs_1">1.8mm</dimen>
+    <dimen name="vs_2">3.6mm</dimen>
+    <dimen name="vs_3">5.4mm</dimen>
+    <dimen name="vs_4">7.2mm</dimen>
+    <dimen name="vs_5">9mm</dimen>
+    <dimen name="vs_6">10.8mm</dimen>
+    <dimen name="vs_8">14.4mm</dimen>
+    <dimen name="vs_10">18mm</dimen>
+    <dimen name="vs_12">21.6mm</dimen>
+    <dimen name="vs_15">27mm</dimen>
+    <dimen name="vs_20">36mm</dimen>
+    <dimen name="vs_25">45mm</dimen>
+    <dimen name="vs_30">54mm</dimen>
+    <dimen name="vs_33">59.4mm</dimen>
+    <dimen name="vs_35">63mm</dimen>
+    <dimen name="vs_40">72mm</dimen>
+    <dimen name="vs_45">81mm</dimen>
+    <dimen name="vs_50">90mm</dimen>
+    <dimen name="vs_55">99mm</dimen>
+    <dimen name="vs_60">108mm</dimen>
+    <dimen name="vs_70">126mm</dimen>
+    <dimen name="vs_80">144mm</dimen>
+    <dimen name="vs_90">162mm</dimen>
+    <dimen name="vs_95">171mm</dimen>
+    <dimen name="vs_100">180mm</dimen>
+    <dimen name="vs_110">198mm</dimen>
+    <dimen name="vs_120">216mm</dimen>
+    <dimen name="vs_128">230.4mm</dimen>
+    <dimen name="vs_140">252mm</dimen>
+    <dimen name="vs_150">270mm</dimen>
+    <dimen name="vs_160">288mm</dimen>
+    <dimen name="vs_180">324mm</dimen>
+    <dimen name="vs_190">342mm</dimen>
+    <dimen name="vs_200">360mm</dimen>
+    <dimen name="vs_214">385.2mm</dimen>
+    <dimen name="vs_225">405mm</dimen>
+    <dimen name="vs_240">432mm</dimen>
+    <dimen name="vs_260">468mm</dimen>
+    <dimen name="vs_280">504mm</dimen>
+    <dimen name="vs_300">540mm</dimen>
+    <dimen name="vs_340">612mm</dimen>
+    <dimen name="vs_400">720mm</dimen>
+    <dimen name="vs_420">756mm</dimen>
+    <dimen name="vs_440">792mm</dimen>
+    <dimen name="vs_460">828mm</dimen>
+    <dimen name="vs_480">864mm</dimen>
+    <dimen name="vs_530">954mm</dimen>
+    <dimen name="vs_600">1080mm</dimen>
+    <dimen name="vs_720">1296mm</dimen>
+    <dimen name="vs_960">1728mm</dimen>
+</resources>

@@ -1,6 +1,11 @@
 package com.github.tvbox.osc.base;
 
+import android.content.Context;
 import android.os.Environment;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -26,6 +31,9 @@ import com.p2p.P2PClass;
 import com.whl.quickjs.android.QuickJSLoader;
 
 import java.io.File;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 import io.github.inflationx.calligraphy3.CalligraphyConfig;
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
@@ -174,5 +182,19 @@ public class App extends MultiDexApplication {
 
     public String getDashData() {
         return dashData;
+    }
+
+    // ========== Toast拦截 ==========
+    
+    @Override
+    public Object getSystemService(String name) {
+        Object service = super.getSystemService(name);
+        
+        // 拦截WindowManager以屏蔽jar中的Toast
+        if (Context.WINDOW_SERVICE.equals(name) && service instanceof WindowManager) {
+            return ToastBlockContext.createWindowManagerProxy((WindowManager) service);
+        }
+        
+        return service;
     }
 }
