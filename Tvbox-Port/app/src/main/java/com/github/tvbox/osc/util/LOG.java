@@ -43,4 +43,8 @@ public class LOG {
         Log.i(tag, msg);
         EventBus.getDefault().post(new LogEvent(String.format("I/%s ==> ", tag) + msg));
     }
+
+    public static void d(String tag, String msg) {
+        Log.d(tag, String.format("D/%s ==> ", TAG) + msg);
+    }
 }

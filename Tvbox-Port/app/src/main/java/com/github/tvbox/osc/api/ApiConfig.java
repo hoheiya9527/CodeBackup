@@ -12,6 +12,7 @@ import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.base.ToastBlockContext;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.LiveChannelItem;
@@ -639,7 +640,10 @@ public class ApiConfig {
             remove = infoJson.getAsJsonPrimitive(TAG_REMOVE).getAsString().trim();
         }
         Hawk.put(TAG_REMOVE, remove);
-
+        String[] delimiters = remove.split("\\|");
+        for (String delimiter : delimiters) {
+            ToastBlockContext.addBlockedKeyword(delimiter);
+        }
     }
 
     private void putLiveHistory(String url) {

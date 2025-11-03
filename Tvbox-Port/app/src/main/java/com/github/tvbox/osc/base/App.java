@@ -1,6 +1,8 @@
 package com.github.tvbox.osc.base;
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.view.WindowManager;
 
 import androidx.multidex.MultiDexApplication;
 
@@ -161,5 +163,17 @@ public class App extends MultiDexApplication {
                 .restartActivity(MainActivity.class) //重新启动后的activity
                 .apply();
     }
+    // ========== Toast拦截 ==========
 
+    @Override
+    public Object getSystemService(String name) {
+        Object service = super.getSystemService(name);
+
+        // 拦截WindowManager以屏蔽jar中的Toast
+        if (Context.WINDOW_SERVICE.equals(name) && service instanceof WindowManager) {
+            return ToastBlockContext.createWindowManagerProxy((WindowManager) service);
+        }
+
+        return service;
+    }
 }
