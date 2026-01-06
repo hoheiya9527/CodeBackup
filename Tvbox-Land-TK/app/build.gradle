@@ -47,17 +47,17 @@ android {
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled false
-            ndk {
-                abiFilters 'armeabi-v7a'
-            }
+//            ndk {
+//                abiFilters 'armeabi-v7a'
+//            }
         }
         release {
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             minifyEnabled false
-            ndk {
-                abiFilters 'armeabi-v7a'
-            }
+//            ndk {
+//                abiFilters 'armeabi-v7a'
+//            }
         }
     }
 
